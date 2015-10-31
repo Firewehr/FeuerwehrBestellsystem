@@ -1,0 +1,617 @@
+<?php
+require_once('auth.php');
+?>
+
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Pos Bestellsystem</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="include/jquery/jquery.mobile-1.4.5.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+
+        <!--<link rel="stylesheet" href="own.css"/>-->
+        <link rel="stylesheet" href="style.css"/>
+
+
+        <script src="include/jquery/jquery-2.1.4.min.js"></script>
+        <script src="include/jquery/jquery.mobile-1.4.5.js"></script>
+
+        <script type="text/javascript">
+
+
+            $.mobile.defaultPageTransition = "fade";
+            var AnzahlOffeneBestellungenSchank = 0;
+            var AnzahlOffeneBestellungenKueche = 0;
+            var PlaySound = false;
+            var PlaySoundKueche = false;
+            $(document).on({
+                ajaxStart: function () {
+                    $.mobile.loading('show');
+                },
+                ajaxStop: function () {
+                    $.mobile.loading('hide');
+                }
+                ,
+                ajaxError: function () {
+                    $.mobile.loading('hide');
+                }
+            });
+            var Tischnummer = 0;
+            var Summe = 0;
+            var AnzahlBestellungenAktuell = -1;
+            var AnzahlGetraenkeWartendAktuell = -1;
+            var bestellungSQL = "";
+            var bestellungTischnr = "";
+            var Beilagen = "";
+            var rowid = "";
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                    if ($(":mobile-pagecontainer").pagecontainer('getActivePage').prop("id") == "Kuechenansicht") {
+                        Check = confirm("Bestellung von Tisch \n \n" + bestellungTischnr + "\n\nvollstaendig?");
+                        if (Check == false) {
+                            //return false;
+                        }
+                        else {
+                            //return true;
+                            kuecheGesamtFertig(bestellungSQL); //sql wird übergeben
+                        }
+                    }
+
+                    if ($(":mobile-pagecontainer").pagecontainer('getActivePage').prop("id") == "Schankansicht") {
+                        Check = confirm("Bestellung von Tisch \n \n" + bestellungTischnr + "\n\nvollstaendig?");
+                        if (Check == false) {
+                            //return false;
+                        }
+                        else {
+                            //return true;
+                            schankGesamtFertig(bestellungSQL); //sql wird übergeben
+                            //alert(bestellungTischnr + ":  Bestellung Kueche abgeschlossen!");
+                        }
+                    }
+                }
+            });
+            function fetchBestellungen() {
+                $.getJSON('bestellungen_json.php', function (jd) {
+                    $('#test').html('<h1>Temperatur: ' + jd.tempc + ' °C</h1><h1>Taupunkt: ' + jd.Taupunkt + ' °C</h1>')
+                    $('#test').append('<h2>Luftfeuchtigkeit: ' + jd.humiditycurr + '%</h2>');
+                });
+            }
+
+            $(document).ready(function () {
+                $("#KuecheButton").click(function () {
+                    Kuechenansicht();
+                });
+            });
+            $(document).ready(function () {
+                $("#SchankButton").click(function () {
+                    SchankAnsicht();
+                });
+            });
+            $(document).ready(function () {
+                $("#TischeButton").click(function () {
+                    TischAnsicht();
+                });
+            });
+            $(document).ready(function () {
+                $("#RechnerButton").click(function () {
+                    RechnerAnsicht();
+                });
+            });
+            $(document).ready(function () {
+                $("#AdminButton").click(function () {
+                    AdminAnsicht();
+                });
+            });
+            function saveNeuerTisch() {
+                neuerTischName = document.getElementById('neuerTischName').value;
+                neueTischNummer = document.getElementById('neueTischNummer').value;
+                dataString = "neuerTischName=" + neuerTischName + "&neueTischNummer=" + neueTischNummer;
+                if (neueTischNummer.length > 0 && neuerTischName.length > 0) {
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        dataType: "text",
+                        url: "neuerTisch_save.php",
+                        cache: false,
+                        data: dataString,
+                        complete: function (data, responseText) {
+                            document.getElementById('neuerTischName').value = "";
+                            document.getElementById('neueTischNummer').value = "";
+                        },
+                        success: function (text)
+                        {
+                            response = text;
+                            alert(response);
+                        },
+                        error: onError
+
+                    });
+                }
+                else {
+                    alert("Eingabefeld darf nicht leer sein!");
+                }
+
+            }
+
+            function saveBestellung(position, tab, tischnummer) {
+                $.mobile.loading('show');
+                dataString = "Tischnummer=" + Tischnummer + "&positionsid=" + position + "&Zusatzinfo=" + Beilagen;
+                //Wenn Speisen gespeichert werden sollen...
+
+                /*
+                 if (tab === 1) {
+                 $("#popupDialog2Content").html("loading ...");
+                 $("#popupDialog2Content").load("beilagen.php?position=" + position);
+                 $("#popupDialog2").popup("open", {positionTo: '#TischAnzeigen'});
+                 //popupDialog2Content <= in dieses Div sollen die Beilagen kommen
+                 
+                 }
+                 */
+
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "bestellung_save.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+                        $('#TischAnzeigen').tabs('load', tab);
+                        Summe = 0;
+                    },
+                    error: onError
+                });
+            }
+
+            function saveBestellung2(position, tab, tischnummer) {
+                $.mobile.loading('show');
+                dataString = "Tischnummer=" + Tischnummer + "&positionsid=" + position + "&Zusatzinfo=" + Beilagen;
+                //Wenn Speisen gespeichert werden sollen...
+                alert(Beilagen);
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "bestellung_save.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+                        $('#TischAnzeigen').tabs('load', tab);
+                        Summe = 0;
+                        Beilagen = "";
+                    },
+                    error: onError
+                });
+            }
+
+            function updateZusatzinfo(info) {
+
+                alert(rowid);
+                dataString = 'Zusatzinfo=' + Beilagen + '&rowid=' + rowid;
+                //alert(text);
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "saveZusatzinfo.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+
+                    },
+                    success: function (text)
+                    {
+                        rowid = "";
+                        response = text;
+                        alert(response);
+                    },
+                    error: onError
+                });
+            }
+
+
+            function saveZusatzinfo(text, rowid) {
+
+                dataString = 'Zusatzinfo=' + text + '&rowid=' + rowid;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "saveZusatzinfo.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+
+                    },
+                    success: function (text)
+                    {
+                        response = text;
+                        TischAnsichtHistory();
+                    },
+                    error: onError
+                });
+            }
+
+            function BenutzerNeu() {
+                dataString = "username=" + document.getElementById('username').value + "&password=" + document.getElementById('password').value + "&password_again=" + document.getElementById('password_again').value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "register.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+
+                    },
+                    success: function (text)
+                    {
+                        response = text;
+                        alert(response);
+                    },
+                    error: onError
+                });
+            }
+
+            function kuecheFertig(rowid) {
+                $.ajax({
+                    type: "GET",
+                    url: "kueche_fertig.php?rowid=" + rowid,
+                    cache: false,
+                    complete: function (data) {
+                        //KuecheFertig();
+                        KuechenansichtRefresh();
+                    },
+                    error: onError
+                });
+            }
+
+            function BestellungBezahlt(sql) {
+                $.ajax({
+                    type: "GET",
+                    url: "BestellungBezahlt.php?rowid=" + sql,
+                    cache: false,
+                    //data: formData,
+                    complete: function (data) {
+                        TischBezahlen();
+                    },
+                    error: onError
+                });
+            }
+
+            function schankGesamtFertig(sql) {
+                $.ajax({
+                    type: "GET",
+                    url: "kueche_fertig_tisch.php?rowid=" + sql,
+                    cache: false,
+                    complete: function (data) {
+                        SchankAnsichtRefresh();
+                    },
+                    error: onError
+                });
+            }
+
+            function kuecheGesamtFertig(sql) {
+                $.ajax({
+                    type: "GET",
+                    url: "kueche_fertig_tisch.php?rowid=" + sql,
+                    cache: false,
+                    //data: formData,
+                    complete: function (data) {
+                        KuechenansichtRefresh();
+                    },
+                    error: onError
+                });
+            }
+
+            function KuecheFertig() {
+                setTimeout("Kuechenansicht()", 300);
+            }
+
+            function SchankFertig(rowid) {
+                $.ajax({
+                    type: "GET",
+                    url: "kueche_fertig.php?rowid=" + rowid,
+                    cache: false,
+                    //data: formData,
+                    complete: function (data) {
+                        SchankAnsichtRefresh();
+                    },
+                    error: onError
+                });
+            }
+
+            function bestellungLoeschen(rowid, tischnummer) {
+                $.ajax({
+                    type: "GET",
+                    url: "bestellung_loeschen.php?rowid=" + rowid,
+                    cache: false,
+                    complete: function (data) {
+                        Summe = 0;
+                        TischAnsichtHistory();
+                    },
+                    error: onError
+                });
+            }
+
+            function onSuccess()
+            {
+                alert("erfolg!");
+                data = $.trim(data);
+            }
+
+            function onError(data, status)
+            {
+                alert("Es gab einen Fehler beim speichern!");
+            }
+
+        </script>
+    </head>
+    <body>
+        <audio id="sound1" src="doorbell-1.ogg"></audio>
+        <!--
+        <div data-role="page">
+            <div data-role="header">Header</div>
+            <div role="main" class="ui-content"><h1>Überschrift</h1>
+                <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b">Delete page...</a>
+                <div data-role="popup" id="popupDialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+                        <div data-role="header" data-theme="a">
+                            <h1>Delete Page?</h1>
+                            </div>
+                        <div role="main" class="ui-content">
+                                <h3 class="ui-title">Are you sure you want to delete this page?</h3>
+                            <p>This action cannot be undone.</p>
+                                <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">Cancel</a>
+                                <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">Delete</a>
+                            </div>
+                </div>
+            </div>
+            <div data-role="footer">Footer</div>
+        </div>
+        -->
+
+        <div data-role="page" id="indexPage">
+
+            <div data-role="header" data-position="fixed">
+                <h1>Bestellsystem Fr&uuml;hschoppen</h1>
+            </div>
+
+            <div data-role="content">
+
+
+                <ul data-role="listview" data-inset="true">
+                    <li>
+                        <a href="#listTische" id="TischeButton">Tische</a>
+                    </li>
+                    <li>
+                        <a href="#Kuechenansicht" id="KuecheButton">K&uuml;che</a>
+                    </li>
+                    <li>
+                        <a href="#Schankansicht" id="SchankButton">Schank</a>
+                    </li>            
+                    <li>
+                        <a href="#myOrdersPage" id="myOrdersButton" onclick="myOrdersAnsicht();">Meine Bestellungen</a>
+                    </li>            
+                    <li>
+                        <a href="#adminPage" id="AdminButton">Admin</a>
+                    </li>
+                    <li>
+                        <a href="logout.php">als <?php echo htmlspecialchars($_SESSION['user']['username']); ?> abmelden</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div data-role="footer">
+                <h1></h1>
+            </div>
+        </div>
+
+        <div data-role="page" id="adminPage">
+        </div>
+
+
+        <div data-role="page" id="listTisch">
+            <a href="#indexPage">zurueck</a>
+        </div>
+
+        <div data-role="page" id="myOrdersPage">
+            <a href="#indexPage">zurueck</a>
+        </div>
+
+        <div data-role="page" id="TischHistory">
+            <a href="#indexPage">zurueck</a>
+        </div>
+
+        <div data-role="page" id="Kuechenansicht">
+            <a href="#indexPage">zurueck</a>
+        </div>
+
+        <div data-role="page" id="Schankansicht">
+        </div>
+
+        <div data-role="page" id="listTische">
+
+        </div>
+
+        <div data-role="page" id="RechnerAnsicht">
+            <a href="#indexPage">zurueck</a>
+        </div>
+
+        <div data-role="page" id="KuecheHistory">
+        </div>
+
+        <div data-role="page" id="listTischBestellungen">
+            <a href="#listTische">zurueck</a>
+        </div>
+
+
+        <script type="text/javascript">
+
+            /*
+             * 
+             $(document).ready(function () {
+             $('#btnReload').click(function () {
+             location.reload();
+             });
+             });
+             
+             
+             function RechnerAnsicht() {
+             $('#RechnerAnsicht').load('rechner.php', function () {
+             $('#RechnerAnsicht').trigger('create');
+             });
+             }
+             
+             
+             $('#listTische').load('list_tische.php', function () {
+             $('#listTische').trigger('create');
+             //$('#listTische').load("list_tische.php");
+             });
+             */
+
+            /*
+             $(document).on("#listTische", function () {
+             // alert("pageshow event fired - pagetwo is now shown");
+             TischAnsicht();
+             
+             });
+             $("#listTische").ready(function () {
+             TischAnsicht();
+             });
+             **/
+            /*
+             $('#listTische').load('list_tische.php', function () {
+             $('#listTische').trigger('create');
+             });
+             $('#myOrdersPage').load('myOrders.php', function () {
+             $('#myOrdersPage').trigger('create');
+             });
+             */
+
+
+            function offeneBestellungen() {
+
+                $('#offeneBestellungen').load('list_Bestellungen.php?tischnummer=' + Tischnummer, function () {
+                    $('#offeneBestellungen').trigger('create');
+                });
+            }
+            function TischAnsichtHistory() {
+                //$(".text").html("loading");
+                $("#Bestellungen").load('list_Bestellungen.php?tischnummer=' + Tischnummer);
+            }
+
+            function TischBezahlen() {
+                $("#Bestellungen").load('list_BestellungenZahlen.php?tischnummer=' + Tischnummer);
+            }
+
+
+            function tisch() {
+                $('#listTischBestellungen').load('tisch_anzeigen.php?tischnummer=' + Tischnummer, function () {
+                    $('#listTischBestellungen').trigger('create');
+                });
+                $.mobile.changePage('#listTischBestellungen');
+            }
+
+            function tischnr(nummer) {
+                $('#listTischBestellungen').load('tisch_anzeigen.php?tischnummer=' + nummer, function () {
+                    $('#listTischBestellungen').trigger('create');
+                });
+                $.mobile.changePage('#listTischBestellungen');
+            }
+            function TischAnsicht() {
+                //$("#listTische").html("loading ...");
+                $.mobile.loading('show');
+                $('#listTische').load('list_tische.php', function () {
+                    $('#listTische').trigger('create');
+                });
+                $.mobile.loading('hide');
+            }
+            function AdminAnsicht() {
+                $('#adminPage').load('admin.php', function () {
+                    $('#adminPage').trigger('create');
+                });
+            }
+            function myOrdersAnsicht() {
+                $('#myOrdersPage').load('myOrders.php', function () {
+                    $('#myOrdersPage').trigger('create');
+                });
+            }
+
+
+            function SchankAnsicht() {
+                $('#Schankansicht').load('list_schank.php', function () {
+                    $('#Schankansicht').trigger('create');
+                    if ($(":mobile-pagecontainer").pagecontainer('getActivePage').prop("id") == "Schankansicht") {
+                        if (AnzahlGetraenkeWartendAktuell == 0) {
+                            setTimeout("SchankAnsicht()", 2000);
+                        }
+                        else if (AnzahlGetraenkeWartendAktuell < 10 && AnzahlGetraenkeWartendAktuell != -1) {
+                            setTimeout("SchankAnsicht()", 2000);
+                        }
+                        else if (AnzahlGetraenkeWartendAktuell < 20 && AnzahlGetraenkeWartendAktuell != -1) {
+                            setTimeout("SchankAnsicht()", 10000);
+                        }
+                        else if (AnzahlGetraenkeWartendAktuell >= 20) {
+                            setTimeout("SchankAnsicht()", 45000);
+                        }
+                        else {
+                            setTimeout("SchankAnsicht()", 5000);
+                        }
+                    }
+                });
+            }
+
+            function Kuechenansicht() {
+                $('#Kuechenansicht').load('list_kueche.php', function () {
+                    $('#Kuechenansicht').trigger('create');
+                    if ($(":mobile-pagecontainer").pagecontainer('getActivePage').prop("id") == "Kuechenansicht") {
+
+                        //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
+
+
+                        if (AnzahlBestellungenAktuell === 0) {
+                            setTimeout("Kuechenansicht()", 5000);
+                        }
+                        else if (AnzahlBestellungenAktuell < 10 && AnzahlBestellungenAktuell != -1) {
+                            setTimeout("Kuechenansicht()", 2000);
+                        }
+                        else if (AnzahlBestellungenAktuell < 25 && AnzahlBestellungenAktuell != -1) {
+                            setTimeout("Kuechenansicht()", 10000);
+                        }
+                        else if (AnzahlBestellungenAktuell >= 25 && AnzahlBestellungenAktuell < 20) {
+                            setTimeout("Kuechenansicht()", 15000);
+                        }
+                        else {
+                            setTimeout("Kuechenansicht()", 5000);
+                        }
+
+                    }
+                });
+            }
+
+            function KuecheHistory() {
+                //$("#KuecheHistory").html("loading ...");
+                $('#KuecheHistory').load('kueche_history.php', function () {
+                    $('#KuecheHistory').trigger('create');
+                });
+            }
+
+            function KuechenansichtRefresh() {
+                $('#Kuechenansicht').load('list_kueche.php', function () {
+                    $('#Kuechenansicht').trigger('create');
+                });
+            }
+
+            function SchankAnsichtRefresh() {
+                $('#Schankansicht').load('list_schank.php', function () {
+                    $('#Schankansicht').trigger('create');
+                });
+            }
+
+
+        </script>
+    </body>
+</html>
