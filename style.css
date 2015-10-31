@@ -1,0 +1,7 @@
+.durchgestrichen {
+    text-decoration: line-through;
+}
+td {
+    height: 50px;
+    vertical-align: top;
+}
