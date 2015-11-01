@@ -4,29 +4,12 @@ SQL Structure:
 -- version 4.4.14
 -- http://www.phpmyadmin.net
 --
--- Host: mysqlsvr11.world4you.com
--- Erstellungszeit: 01. Nov 2015 um 19:18
--- Server-Version: 5.1.73
--- PHP-Version: 5.6.12
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Datenbank: `ff_manhartsbrunnatdb2`
---
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `beilagen`
---
 
 CREATE TABLE IF NOT EXISTS `beilagen` (
   `rowid` int(11) NOT NULL,
