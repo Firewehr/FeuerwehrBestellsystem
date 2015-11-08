@@ -1,7 +1,7 @@
 <?php
 require_once('auth.php');
 
-$sql = intval($_GET['rowid']);
+$sql = $_GET['rowid'];
 
 
 $sql = substr($sql, 0, -10);
@@ -9,7 +9,6 @@ $sql = substr($sql, 0, -10);
 require_once 'include/db.php';
 
 
-//UPDATE `pos`.`bestellungen` SET `zeitKueche`=current_timestamp, `kueche`= '1' WHERE rowid=432 OR rowid=434
 $sql = "UPDATE `bestellungen` SET `timestampBezahlung`=current_timestamp, `kueche`='1', `kellnerZahlung`='" . htmlspecialchars($_SESSION['user']['username']) . "' WHERE rowid=" . $sql;
 
 
