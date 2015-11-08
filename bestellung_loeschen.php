@@ -3,7 +3,7 @@
 require_once('auth.php');
 
 error_reporting(E_ALL);
-$rowid = $_GET['rowid'];
+$rowid = intval($_GET['rowid']);
 
 
 include_once('include/db.php');

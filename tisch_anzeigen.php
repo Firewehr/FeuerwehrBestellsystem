@@ -1,6 +1,6 @@
 <?php
 require_once('auth.php');
-$Tischnummer = $_GET['tischnummer'];
+$Tischnummer = intval($_GET['tischnummer']);
 
 error_reporting(E_ALL);
 include_once ("include/db.php");

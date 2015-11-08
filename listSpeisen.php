@@ -3,7 +3,7 @@
 require_once('auth.php');
 error_reporting(E_ALL);
 header("Cache-Control: no-cache, must-revalidate");
-$Tischnummer = $_GET['tischnummer'];
+$Tischnummer = intval($_GET['tischnummer']);
 include_once ("include/db.php");
 ?>
 

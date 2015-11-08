@@ -1,7 +1,7 @@
 <?php
 
 require_once('auth.php');
-$Tischnummer = $_GET['tischnummer'];
+$Tischnummer = intval($_GET['tischnummer']);
 echo '<div id="Dessert">';
 //echo '<h3>Desserts</h3>';
 include_once ("include/db.php");

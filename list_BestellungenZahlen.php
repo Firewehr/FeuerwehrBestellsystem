@@ -12,7 +12,7 @@ require_once('auth.php');
 </script>
 <?php
 
-$Tischnummer = $_GET['tischnummer'];
+$Tischnummer = intval($_GET['tischnummer']);
 error_reporting(E_ALL);
 echo '<table border="0" width="100%">';
 try {

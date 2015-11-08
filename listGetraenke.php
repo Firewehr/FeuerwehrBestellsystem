@@ -1,7 +1,7 @@
 <?php
 require_once('auth.php');
 header("Cache-Control: no-cache");
-$Tischnummer = $_GET['tischnummer'];
+$Tischnummer = intval($_GET['tischnummer']);
 echo '<div id="Getraenke">';
 //echo '<h3>Getraenke</h3>';
 

@@ -1,6 +1,6 @@
 <?php
 
-$position = $_GET['position'];
+$position = intval($_GET['position']);
 
 error_reporting(E_ALL);
 include('include/db.php');

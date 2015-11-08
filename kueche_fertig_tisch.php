@@ -1,7 +1,7 @@
 <?php
 
 require_once('auth.php');
-$sql = $_GET['rowid'];
+$sql = intval($_GET['rowid']);
 
 require_once 'include/db.php';
 
