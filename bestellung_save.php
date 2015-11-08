@@ -2,8 +2,8 @@
 
 require_once('auth.php');
 header("Cache-Control: no-cache");
-$positionsid = $_POST['positionsid'];
-$tischnummer = $_POST['Tischnummer'];
+$positionsid = intval($_POST['positionsid']);
+$tischnummer = intval($_POST['Tischnummer']);
 
 require_once('include/db.php');
 

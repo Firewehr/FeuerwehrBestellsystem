@@ -2,8 +2,8 @@
 
 require_once('auth.php');
 
-$rowid = $_POST['rowid'];
-$Zusatzinfo = $_POST['Zusatzinfo'];
+$rowid = intval($_POST['rowid']);
+$Zusatzinfo = mysql_escape_string($_POST['Zusatzinfo']);
 
 if (!empty($Zusatzinfo)) {
 
