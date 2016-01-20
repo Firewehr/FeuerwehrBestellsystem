@@ -7,11 +7,11 @@ require_once('auth.php');
 $Tischnummer = intval($_GET['tischnummer']);
 try {
     include_once ("include/db.php");
-    $sql = "SELECT `bestellungen`.`tischnummer`,bestellungen.kellner, bestellungen.timestampBezahlung, bestellungen.Zusatzinfo, `positionen`.`Betrag` as betrag, `positionen`.`Positionsname`, `bestellungen`.`zeitKueche`,`bestellungen`.`position`, `positionen`.`rowid`, `bestellungen`.`zeitstempel`, `bestellungen`.`rowid`,`bestellungen`.`delete`,`bestellungen`.`kueche` AS kuechef FROM `bestellungen`, `positionen` WHERE  `positionen`.`rowid`=`bestellungen`.`position` AND `bestellungen`.`tischnummer`=" . $Tischnummer . ' AND `bestellungen`.`delete`=0 ORDER BY bestellungen.zeitstempel DESC LIMIT 30';
+    $sql = "SELECT `bestellungen`.`tischnummer`,bestellungen.kellner,bestellungen.kellnerZahlung,bestellungen.timestampBezahlung, bestellungen.timestampBezahlung, bestellungen.Zusatzinfo, `positionen`.`Betrag` as betrag, `positionen`.`Positionsname`, `bestellungen`.`zeitKueche`,`bestellungen`.`position`, `positionen`.`rowid`, `bestellungen`.`zeitstempel`, `bestellungen`.`rowid`,`bestellungen`.`delete`,`bestellungen`.`kueche` AS kuechef FROM `bestellungen`, `positionen` WHERE  `positionen`.`rowid`=`bestellungen`.`position` AND `bestellungen`.`tischnummer`=" . $Tischnummer . ' AND `bestellungen`.`delete`=0 ORDER BY bestellungen.zeitstempel DESC LIMIT 30';
     $result1 = mysqli_query($conn, $sql);
     $Summe = 0;
 
-    echo '<table width="100%"><tr><th>Name</th><th>Bestellt</th><th>Fertig</th><th>&nbsp;</th></tr>';
+    echo '<table width="100%"><tr><th>Name</th><th>Bestellung</th><th>Küche</th><th>Zahlung</th><th>&nbsp;</th></tr>';
     while ($row = mysqli_fetch_assoc($result1)) {
 
         $Colour = "";
@@ -46,7 +46,7 @@ try {
 
         $timestamp = strtotime($row['zeitstempel']);
         //echo date("H:i:s", $timestamp);
-        echo '<td><b>' . utf8_encode($row['Positionsname']) . '</b><a data-role="button"  onclick=\'saveZusatzinfo(prompt("Zusatzinfo ' . utf8_encode($row['Positionsname']) . ':","' . $row['Zusatzinfo'] . '"),' . $row['rowid'] . ');\'>+Info</a>';
+        echo '<td><b>' . utf8_encode($row['Positionsname']) . '</b><a data-role="button"  onclick=\'saveZusatzinfo(prompt("Zusatzinfo ' . htmlentities(utf8_encode($row['Positionsname']),ENT_QUOTES) . ':","' . $row['Zusatzinfo'] . '"),' . $row['rowid'] . ');\'>+Info</a>';
         if (!empty($row['Zusatzinfo'])) {
             echo '<p>' . $row['Zusatzinfo'] . '</p>';
         }
@@ -70,6 +70,7 @@ try {
             $color = "rgba(51, 204, 51,0.1)";
             $class = "";
             $onClick = "";
+            echo date("H:i", strtotime($row['timestampBezahlung'])) . '<br>' . $row['kellnerZahlung'];
         }
 
 
