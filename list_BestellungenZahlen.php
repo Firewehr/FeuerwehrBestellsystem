@@ -45,7 +45,7 @@ try {
 
         echo '<td>' . utf8_encode($row['Positionsname']) . '</td>';
         echo '<td width="10%">';
-        echo '<a data-role="button" id="plus' . $row['rowidBestellung'] . '" onclick="$(\'#plus' . $row['rowidBestellung'] . '\').hide();BetragEinzelnBezahlen=BetragEinzelnBezahlen+' . $row['betrag'] . ';$(\'#summeZahlung\').text(BetragEinzelnBezahlen.toFixed(2) + \' EUR\');rowIDsBezahltAlle=``; $(\'#btnBezahlenGesamt\').hide();rowIDsBezahlt=rowIDsBezahlt+\'' . $row['rowidBestellung'] . ' OR rowid=\'" class="ui-btn">&nbsp;+&nbsp;</a>';
+        echo '<input type="button" id="plus' . $row['rowidBestellung'] . '" onclick="$(\'#plus' . $row['rowidBestellung'] . '\').hide();BetragEinzelnBezahlen=BetragEinzelnBezahlen+' . $row['betrag'] . ';$(\'#zeile' . $row['rowidBestellung'] . '\').css(\'background-color\', \'#66ff66\');BetragEinzelnBezahlen=BetragEinzelnBezahlen+' . $row['betrag'] . ';$(\'#summeZahlung\').text(BetragEinzelnBezahlen.toFixed(2) + \' EUR\');rowIDsBezahltAlle=``; $(\'#btnBezahlenGesamt\').hide();rowIDsBezahlt=rowIDsBezahlt+\'' . $row['rowidBestellung'] . ' OR rowid=\'" value="&nbsp;+&nbsp;"/>';
         echo '</td>';
 
         setlocale(LC_MONETARY, 'de_DE@euro');
