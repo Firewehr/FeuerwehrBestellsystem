@@ -105,4 +105,9 @@ echo '</div>';
         $('#tabGetraenke').click();
     });
 
+    $("#Speisen").on("swipeleft", function () {
+        console.log("swipeleft");
+        TischAnsichtHistory();
+    });
+
 </script>'
