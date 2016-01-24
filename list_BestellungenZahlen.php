@@ -1,5 +1,4 @@
 <?php
-
 require_once('auth.php');
 ?>
 <a style="background-color:rgba(158, 158, 150,0.3)" href="#" data-theme="b" onclick="tisch();" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Zurück zur Speisekarte</a>
@@ -11,7 +10,6 @@ require_once('auth.php');
     rowIDsBezahltAlle = "";
 </script>
 <?php
-
 $Tischnummer = intval($_GET['tischnummer']);
 error_reporting(E_ALL);
 echo '<table border="0" width="100%">';
@@ -45,7 +43,12 @@ try {
 
         echo '<td>' . utf8_encode($row['Positionsname']) . '</td>';
         echo '<td width="10%">';
-        echo '<input type="button" id="plus' . $row['rowidBestellung'] . '" onclick="$(\'#plus' . $row['rowidBestellung'] . '\').hide();BetragEinzelnBezahlen=BetragEinzelnBezahlen+' . $row['betrag'] . ';$(\'#zeile' . $row['rowidBestellung'] . '\').css(\'background-color\', \'#66ff66\');BetragEinzelnBezahlen=BetragEinzelnBezahlen+' . $row['betrag'] . ';$(\'#summeZahlung\').text(BetragEinzelnBezahlen.toFixed(2) + \' EUR\');rowIDsBezahltAlle=``; $(\'#btnBezahlenGesamt\').hide();rowIDsBezahlt=rowIDsBezahlt+\'' . $row['rowidBestellung'] . ' OR rowid=\'" value="&nbsp;+&nbsp;"/>';
+        echo '<input type="button" id="plus' . $row['rowidBestellung'] . '" onclick="$(\'#plus' . $row['rowidBestellung'] . '\').hide();'
+                . 'BetragEinzelnBezahlen=BetragEinzelnBezahlen+' . $row['betrag'] .
+                ';$(\'#zeile' . $row['rowidBestellung'] . '\').css(\'background-color\', \'#66ff66\');' . 
+                ';$(\'#summeZahlung\').text(BetragEinzelnBezahlen.toFixed(2) + \' EUR\');'
+                . 'rowIDsBezahltAlle=``; $(\'#btnBezahlenGesamt\').hide();'
+                . 'rowIDsBezahlt=rowIDsBezahlt+\'' . $row['rowidBestellung'] . ' OR rowid=\'" value="&nbsp;+&nbsp;"/>';
         echo '</td>';
 
         setlocale(LC_MONETARY, 'de_DE@euro');
@@ -64,9 +67,10 @@ try {
 
     echo '<tr>';
     echo '<td colspan="4">';
-    echo '<a style="background-color:rgba(255, 255, 0,0.5)" onclick="$(\'#btnBezahlenGesamt\').hide();BestellungBezahlt(rowIDsBezahlt+rowIDsBezahltAlle);" class="ui-btn">Bezahlen</a>';
+    if ($Summe > 0) {
+        echo '<a style="background-color:rgba(255, 255, 0,0.5)" onclick="$(\'#btnBezahlenGesamt\').hide();BestellungBezahlt(rowIDsBezahlt+rowIDsBezahltAlle);" class="ui-btn">Bezahlen</a>';
+    }
     echo '</td></tr>';
-
 } catch (Exception $e) {
     echo $e->getMessage();
 }
