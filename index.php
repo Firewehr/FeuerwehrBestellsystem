@@ -352,7 +352,7 @@ require_once('auth.php');
 
             function onError(data, status)
             {
-                alert("Es gab einen Fehler beim speichern!");
+                alert("Fehler: Der Eintrag konnte nicht gespeichert werden!");
             }
 
         </script>
