@@ -21,6 +21,13 @@ require_once('auth.php');
 
         <script type="text/javascript">
 
+            var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+            Notification.requestPermission();
+
+
+            Notification.requestPermission(function (permission) {
+                console.log(permission);
+            });
 
             $.mobile.defaultPageTransition = "fade";
             var AnzahlOffeneBestellungenSchank = 0;
@@ -53,8 +60,7 @@ require_once('auth.php');
                         Check = confirm("Bestellung von Tisch \n \n" + bestellungTischnr + "\n\nvollstaendig?");
                         if (Check == false) {
                             //return false;
-                        }
-                        else {
+                        } else {
                             //return true;
                             kuecheGesamtFertig(bestellungSQL); //sql wird übergeben
                         }
@@ -64,8 +70,7 @@ require_once('auth.php');
                         Check = confirm("Bestellung von Tisch \n \n" + bestellungTischnr + "\n\nvollstaendig?");
                         if (Check == false) {
                             //return false;
-                        }
-                        else {
+                        } else {
                             //return true;
                             schankGesamtFertig(bestellungSQL); //sql wird übergeben
                             //alert(bestellungTischnr + ":  Bestellung Kueche abgeschlossen!");
@@ -129,8 +134,7 @@ require_once('auth.php');
                         error: onError
 
                     });
-                }
-                else {
+                } else {
                     alert("Eingabefeld darf nicht leer sein!");
                 }
 
@@ -251,6 +255,9 @@ require_once('auth.php');
                     {
                         response = text;
                         alert(response);
+                        $('#username').val("");
+                        $('#password').val("");
+                        $('#password_again').val("");
                     },
                     error: onError
                 });
@@ -547,17 +554,13 @@ require_once('auth.php');
                     if ($(":mobile-pagecontainer").pagecontainer('getActivePage').prop("id") == "Schankansicht") {
                         if (AnzahlGetraenkeWartendAktuell == 0) {
                             setTimeout("SchankAnsicht()", 2000);
-                        }
-                        else if (AnzahlGetraenkeWartendAktuell < 10 && AnzahlGetraenkeWartendAktuell != -1) {
+                        } else if (AnzahlGetraenkeWartendAktuell < 10 && AnzahlGetraenkeWartendAktuell != -1) {
                             setTimeout("SchankAnsicht()", 2000);
-                        }
-                        else if (AnzahlGetraenkeWartendAktuell < 20 && AnzahlGetraenkeWartendAktuell != -1) {
+                        } else if (AnzahlGetraenkeWartendAktuell < 20 && AnzahlGetraenkeWartendAktuell != -1) {
                             setTimeout("SchankAnsicht()", 10000);
-                        }
-                        else if (AnzahlGetraenkeWartendAktuell >= 20) {
+                        } else if (AnzahlGetraenkeWartendAktuell >= 20) {
                             setTimeout("SchankAnsicht()", 45000);
-                        }
-                        else {
+                        } else {
                             setTimeout("SchankAnsicht()", 5000);
                         }
                     }
@@ -574,17 +577,13 @@ require_once('auth.php');
 
                         if (AnzahlBestellungenAktuell === 0) {
                             setTimeout("Kuechenansicht()", 5000);
-                        }
-                        else if (AnzahlBestellungenAktuell < 10 && AnzahlBestellungenAktuell != -1) {
+                        } else if (AnzahlBestellungenAktuell < 10 && AnzahlBestellungenAktuell != -1) {
                             setTimeout("Kuechenansicht()", 2000);
-                        }
-                        else if (AnzahlBestellungenAktuell < 25 && AnzahlBestellungenAktuell != -1) {
+                        } else if (AnzahlBestellungenAktuell < 25 && AnzahlBestellungenAktuell != -1) {
                             setTimeout("Kuechenansicht()", 10000);
-                        }
-                        else if (AnzahlBestellungenAktuell >= 25 && AnzahlBestellungenAktuell < 20) {
+                        } else if (AnzahlBestellungenAktuell >= 25 && AnzahlBestellungenAktuell < 20) {
                             setTimeout("Kuechenansicht()", 15000);
-                        }
-                        else {
+                        } else {
                             setTimeout("Kuechenansicht()", 5000);
                         }
 
