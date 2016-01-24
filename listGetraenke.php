@@ -77,3 +77,10 @@ while ($rowww = mysqli_fetch_assoc($result)) {
 mysqli_close($conn);
 echo '</div>';
 echo '</div>';
+?>
+<script>
+    $("#Getraenke").on("swipeleft", function () {
+        console.log("swipeleft");
+        $('#tabSpeisen').click();
+    });
+</script>'
