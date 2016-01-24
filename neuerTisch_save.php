@@ -4,7 +4,7 @@ include_once ("include/db.php");
 
 error_reporting(E_ALL);
 
-$tischname = mysql_escape_string($_POST['neuerTischName']);
+$tischname = mysqli_real_escape_string($conn, $_POST['neuerTischName']);
 $tischnummer = intval($_POST['neueTischNummer']);
 
 $sql = "INSERT `tische` SET `tischnummer`='$tischnummer',`tischname`='$tischname'";
