@@ -56,16 +56,15 @@ require_once('auth.php');
             <?php
             try {
                 include_once ("include/db.php");
-                echo '<table widht="100%"><tr><th>Benutzer</th></tr>';
+                echo '<table widht="100%"><tr><th>Benutzer</th><th>Erstellungsdatum</th></tr>';
 
                 $sql = "SELECT * FROM `users` LIMIT 100";
-
                 $result = mysqli_query($conn, $sql);
 
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo '<tr>';
-                    echo '<td>' . $row['username'] . '</td';
-                    echo '/<tr>';
+                    echo '<td>' . $row['username'] . '</td><td>' . $row['timestamp'] . '</td';
+                    echo '</tr>';
                 }
                 echo '</table>';
             } catch (Exception $e) {
