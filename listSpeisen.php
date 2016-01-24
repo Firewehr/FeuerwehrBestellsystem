@@ -1,5 +1,4 @@
 <?php
-
 require_once('auth.php');
 error_reporting(E_ALL);
 header("Cache-Control: no-cache, must-revalidate");
@@ -8,7 +7,6 @@ include_once ("include/db.php");
 ?>
 
 <?php
-
 echo '<div id="Speisen">';
 
 $sql1 = "SELECT * FROM positionen WHERE type=1 ORDER BY reihenfolge";
@@ -97,7 +95,14 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
 ?>
 
 <?php
-
 echo '</div>';
 
 echo '</div>';
+?>
+<script>
+    $("#Speisen").on("swiperight", function () {
+        console.log("swiperight");
+        $('#tabGetraenke').click();
+    });
+
+</script>'
