@@ -83,4 +83,11 @@ echo '</div>';
         console.log("swipeleft");
         $('#tabSpeisen').click();
     });
+    
+     $("#Getraenke").on("swiperight", function () {
+        console.log("swiperight");
+        //#listTische
+        $.mobile.changePage('#listTische');
+        TischAnsicht();
+    });   
 </script>'
