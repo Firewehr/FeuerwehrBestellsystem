@@ -9,6 +9,7 @@ require_once('auth.php');
     rowIDsBezahlt = "";
     rowIDsBezahltAlle = "";
 </script>
+<div id="BestellungZahlen">
 <?php
 $Tischnummer = intval($_GET['tischnummer']);
 error_reporting(E_ALL);
@@ -76,3 +77,13 @@ try {
 }
 echo '</table>';
 echo '<script>rowIDsBezahltAlle="' . $rowIDsBezahltAlle . '";</script>';
+echo '</div>';
+?>
+<script>
+     $("#BestellungZahlen").on("swiperight", function () {
+        console.log("swiperight");
+        //#listTische
+        $.mobile.changePage('#listTischBestellungen');
+        tisch();
+    });   
+</script>'
