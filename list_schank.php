@@ -10,10 +10,7 @@ error_reporting(E_ALL);
 </div>
 
 <div class="ui-grid-a ui-responsive">
-    <table>
-        <tr>
-            <td width="85%">
-
+    <div class="ui-block-a">
                 <div class="ui-bar ui-bar-a">
 
                     <div class="ui-grid-a" >
@@ -41,8 +38,8 @@ error_reporting(E_ALL);
                                     echo '</div>';
                                 }
 
+                        echo '<div class="ui-block-a">';
 
-                                echo '<div class="ui-block-a">';
                                 $tischnummerselect = $row['tischnummer'];
 
                                 $sql2 = "SELECT COUNT( * ) AS anzahl, `bestellungen`.`zeitKueche`, positionen.Kurzbezeichnung, `bestellungen`.`position`, bestellungen.Zusatzinfo, `bestellungen`.`tischnummer`, `bestellungen`.`zeitstempel`, `positionen`.`rowid`, `positionen`.`Positionsname`, `positionen`.`type`, `bestellungen`.`kueche`, `bestellungen`.`delete`, `bestellungen`.`rowid`, FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  FROM bestellungen, positionen WHERE bestellungen.position=positionen.rowid AND `type`=2 AND  bestellungen.zeitKueche='0000-00-00 00:00:00' AND bestellungen.ausgeliefert=0 AND positionen.type=2 AND bestellungen.delete=0 AND bestellungen.tischnummer=" . $tischnummerselect . " AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " GROUP BY Zusatzinfo, Positionsname ORDER BY positionen.Positionsname ASC";
@@ -136,11 +133,7 @@ error_reporting(E_ALL);
                         }
                         ?>
                     </div>
-
-
-            </td>
-            <td>
-                <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="background-color:<?php echo $bgcolor; ?>"><?php
+        </div></div><div class="ui-block-b"><div class="ui-bar ui-bar-a" style="background-color:<?php echo $bgcolor; ?>"><?php
                         echo '<p style="font-size:30px;color:' . $colorAnzahl . '" align="center">' . $wartendeBestellungen . ' Bestellungen wartend</p>';
                         echo '<script type="text/javascript">AnzahlBestellungenAktuell="' . $wartendeBestellungen . '"</script>';
                         try {
@@ -168,19 +161,36 @@ error_reporting(E_ALL);
                             echo $e->getMessage();
                         }
                         ?></div></div>
-            </td>
-        </tr>
-    </table>
+</div>
     <script>
 
-        if (AnzahlOffeneBestellungenSchank < 1) {
-            PlaySound = true;
+    if (AnzahlOffeneBestellungenKueche < 1) {
+        PlaySoundKueche = true;
         }
 
-        if (AnzahlOffeneBestellungenSchank > 0 && PlaySound === true) {
+    if (AnzahlOffeneBestellungenKueche > 0 && PlaySoundKueche === true) { //
             document.getElementById("sound1").play();
-            PlaySound = false;
+        //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
+
+        //Notification if Supported by the Browser
+        
+        if (!("Notification" in window)) {
+            //alert("This browser does not support desktop notification");
+        } else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var notification = new Notification("Neue Bestellung!");
+        } else if (Notification.permission !== 'denied') { // Otherwise, we need to ask the user for permission
+            Notification.requestPermission(function (permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification("Hi there!");
         }
+            });
+
+        }
+        
+        PlaySoundKueche = false;
+    }
     </script>
     <?php
     echo "</div>";
