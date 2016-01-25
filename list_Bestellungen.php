@@ -10,8 +10,7 @@ try {
     $sql = "SELECT `bestellungen`.`tischnummer`,bestellungen.kellner,bestellungen.kellnerZahlung,bestellungen.timestampBezahlung, bestellungen.timestampBezahlung, bestellungen.Zusatzinfo, `positionen`.`Betrag` as betrag, `positionen`.`Positionsname`, `bestellungen`.`zeitKueche`,`bestellungen`.`position`, `positionen`.`rowid`, `bestellungen`.`zeitstempel`, `bestellungen`.`rowid`,`bestellungen`.`delete`,`bestellungen`.`kueche` AS kuechef FROM `bestellungen`, `positionen` WHERE  `positionen`.`rowid`=`bestellungen`.`position` AND `bestellungen`.`tischnummer`=" . $Tischnummer . ' AND `bestellungen`.`delete`=0 ORDER BY bestellungen.zeitstempel DESC LIMIT 30';
     $result1 = mysqli_query($conn, $sql);
     $Summe = 0;
-
-    echo '<table width="100%"><tr><th>Name</th><th>Bestellung</th><th>Küche</th><th>Zahlung</th><th>&nbsp;</th></tr>';
+    echo '<table id="bestellungenTable" width="100%" data-role="table" data-mode="columntoggle" class="ui-responsive"><thead><tr><th>Name</th><th>Bestellung</th><th>Küche</th><th>Zahlung</th><th>&nbsp;</th></tr></thead>';
     while ($row = mysqli_fetch_assoc($result1)) {
 
         $Colour = "";
@@ -33,7 +32,7 @@ try {
         }
 
 
-        echo '<tr style="background-color:' . $Colour . '">';
+        echo '<tbody><tr style="background-color:' . $Colour . '">';
 
         $Colour = "white";
 
@@ -75,7 +74,7 @@ try {
 
 
         echo '</td>';
-        echo '</tr>';
+        echo '</tr></tbody>';
     }
     echo '</table>';
 
@@ -84,3 +83,10 @@ try {
 }
 
   
+?>
+<script>
+    $("#bestellungenTable").on("swiperight", function () {
+        console.log("swiperight");
+        tisch();
+    });
+</script>
