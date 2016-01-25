@@ -15,10 +15,25 @@ while ($row = mysqli_fetch_assoc($result)) {
     $tischname = $row['tischname'];
 }
 
-mysqli_close($conn);
+
 
 echo '<div data-role="header" data-position="fixed">';
-echo '<h1 onclick="TischBezahlen();">Tisch ' . $tischname . ' (Zahlen)</h1>'; //"(#" . $Tischnummer . ')
+
+$result2 = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM bestellungen WHERE `delete`=0 AND `zeitKueche`!=\"0000-00-00 00:00:00\" AND `timestampBezahlung`=\"0000-00-00 00:00:00\"  AND tischnummer=" . $Tischnummer);
+while ($roww = mysqli_fetch_assoc($result2)) {
+    //echo $roww['cnt'];
+
+    if ($roww['cnt'] > 0) {
+        $style=' style="background-color:yellow" ';
+    }
+
+    if ($roww['cnt'] == 0) {
+        
+        $style ="";
+    }
+}
+
+echo '<h1 onclick="TischBezahlen();"' . $style . '>Tisch ' . $tischname . ' (Zahlen)</h1>'; //"(#" . $Tischnummer . ')
 echo '<a href="#listTische" onclick="TischAnsicht();" class="ui-btn ui-btn-left ui-icon-arrow-l ui-btn-icon-left">Tische</a>';
 echo '<a onclick="TischAnsichtHistory();" class="ui-btn-right">Historie</a>';
 echo '</div>';
@@ -55,3 +70,4 @@ echo '</div>';
 <?php
 echo '<div data-role="footer">';
 echo '</div>';
+mysqli_close($conn);
