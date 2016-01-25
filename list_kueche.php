@@ -43,7 +43,7 @@ error_reporting(E_ALL);
                         $tischnummerselect = $row['tischnummer'];
 
                         $sql2 = "SELECT COUNT( * ) AS anzahl, `bestellungen`.`zeitKueche`, `bestellungen`.`position`, bestellungen.Zusatzinfo, `bestellungen`.`tischnummer`, `bestellungen`.`zeitstempel`, `positionen`.`rowid`, `positionen`.`Positionsname`, `positionen`.`type`, `bestellungen`.`kueche`, `bestellungen`.`delete`, `bestellungen`.`rowid`, FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  FROM bestellungen, positionen WHERE bestellungen.position=positionen.rowid AND `type`=1 AND  bestellungen.zeitKueche='0000-00-00 00:00:00' AND bestellungen.ausgeliefert=0 AND positionen.type=1 AND bestellungen.delete=0 AND bestellungen.tischnummer=" . $tischnummerselect . " AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " GROUP BY Zusatzinfo,Positionsname ORDER BY positionen.Positionsname ASC";
-                        
+
                         $result2 = mysqli_query($conn, $sql2);
 
                         while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der offenen Bestellungen eines Tisches
@@ -102,7 +102,6 @@ error_reporting(E_ALL);
                         echo '<p>(wartend:' . gmdate("i:s", (time() - $timestamp)) . ')</p>';
                         echo '</div>';
                     }
-
                 } catch (Exception $e) {
                     echo $e->getMessage();
                 }
@@ -133,8 +132,6 @@ error_reporting(E_ALL);
                 ?>
             </div>
         </div></div><div class="ui-block-b"><div class="ui-bar ui-bar-a" style="background-color:<?php echo $bgcolor; ?>"><?php
-
-
         echo '<p style="font-size:30px;color:' . $colorAnzahl . '" align="center">' . $wartendeBestellungen . ' Bestellungen wartend</p>';
         echo '<script type="text/javascript">AnzahlBestellungenAktuell="' . $wartendeBestellungen . '"</script>';
         try {
@@ -163,18 +160,36 @@ error_reporting(E_ALL);
         }
         ?></div></div>
 </div>
-    <script>
-        
-        if (AnzahlOffeneBestellungenKueche < 1) {
-            PlaySoundKueche = true;
-        }
+<script>
 
-        if (AnzahlOffeneBestellungenKueche > 0 && PlaySoundKueche===true) { //
-            document.getElementById("sound1").play();
-            //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
-            PlaySoundKueche = false;
+    if (AnzahlOffeneBestellungenKueche < 1) {
+        PlaySoundKueche = true;
+    }
+
+    if (AnzahlOffeneBestellungenKueche > 0 && PlaySoundKueche === true) { //
+        document.getElementById("sound1").play();
+        //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
+
+        //Notification if Supported by the Browser
+        
+        if (!("Notification" in window)) {
+            //alert("This browser does not support desktop notification");
+        } else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var notification = new Notification("Neue Bestellung!");
+        } else if (Notification.permission !== 'denied') { // Otherwise, we need to ask the user for permission
+            Notification.requestPermission(function (permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification("Hi there!");
+                }
+            });
+
         }
-    </script>
+        
+        PlaySoundKueche = false;
+    }
+</script>
 <?php
 echo "</div>";
 ?>
