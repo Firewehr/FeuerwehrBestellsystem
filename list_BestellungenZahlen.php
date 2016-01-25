@@ -86,4 +86,4 @@ echo '</div>';
         $.mobile.changePage('#listTischBestellungen');
         tisch();
     });   
-</script>'
+</script>
