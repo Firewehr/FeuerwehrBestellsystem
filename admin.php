@@ -73,15 +73,39 @@ require_once('auth.php');
             ?>
 
         </div>
+        <div id="Positionanlegen" data-role="collapsible" data-collapsed="true">
+            <h3>Position anlegen</h3>
+            <form>
+                <div><label for="Positionsname">Positionsname</label> <input type="text" name="f[Positionsname]" id="Positionsname"/></div>
+                <div><label for="produktkategorie">Produktkategorie</label>
+                    <select name="f[produktkategorie]" id="produktkategorie">
+                        <option value="1">Speise</option>
+                        <option value="2">Getränk</option>
+                    </select>
+                </div>
+                <div><label for="Betrag">Preis</label> <input type="text" name="f[Betrag]" id="Betrag" /></div>
+                <div><label for="Kapazitaet">Kapazität</label> <input value placeholder="Die maximal bestellbare Menge. -1 für unendlich" type="text" name="f[Kapazitaet]" id="Kapazitaet" /></div>
+
+                <fieldset>
+                    <div>
+                        <a onclick="ProduktNeu();" data-icon="check" data-role="button" data-inline="true" data-theme="a">Speichern</a>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
         <div id="Speisekarte" data-role="collapsible" data-collapsed="true">
             <h3>Speisekarte</h3>
+
+
+
             <?php
             error_reporting(E_ALL);
             try {
                 include_once ("include/db.php");
 
                 $result4 = mysqli_query($conn, "SELECT * FROM positionen");
-                echo '<table widht="100%"><tr><th>Position</th><th>Betrag</th><th>Anzahl Bestellung</th><th>Restkapazität</th></tr>';
+                echo '<table widht="100%"><tr><th>Position</th><th>Betrag</th><th>Bestellt</th><th>Rest</th><th>-</th></tr>';
                 while ($row4 = mysqli_fetch_assoc($result4)) {
 
                     //echo $row4['rowid'];
@@ -116,6 +140,8 @@ require_once('auth.php');
                     echo $anzahlBestellt . ' von ' . $maxBestellbar;
                     echo '</td><td>';
                     echo $rest . ' ' . $text;
+                    echo '</td><td>';
+                    echo '<a onclick="ProduktLoeschen(' . $row4['rowid'] . ')">löschen</a>';
                     echo '</td></tr>';
                 }
                 echo '</table>';
@@ -150,7 +176,7 @@ require_once('auth.php');
             while ($row3 = mysqli_fetch_assoc($result)) {
                 echo "<li>Wartende Bestellungen: " . utf8_encode($row3['cnt']) . "</li>";
             }
-            echo 'Kellner:';
+            echo '<h3>Kellner:</h3>';
             $conn = mysqli_connect($hostname, $username, $password, $dbname);
 
             if (!$conn) {
@@ -161,6 +187,7 @@ require_once('auth.php');
             //echo $sql;
             $result = mysqli_query($conn, $sql);
             echo '<table>';
+            echo '<tr><th>Kellner</th><th>Anzahl Bestellungen</th><th>Betrag</th></tr>';
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td>' . $row['cnt'] . '</td><td>' . $row['summe'] . ' €</td></tr>';
             }
