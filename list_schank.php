@@ -164,16 +164,17 @@ error_reporting(E_ALL);
 </div>
     <script>
 
-    if (AnzahlOffeneBestellungenKueche < 1) {
+    if (AnzahlOffeneBestellungenSchank < 1) {
         PlaySoundKueche = true;
         }
 
-    if (AnzahlOffeneBestellungenKueche > 0 && PlaySoundKueche === true) { //
+    if (AnzahlOffeneBestellungenSchank > 0 && PlaySoundSchank === true) { //
             document.getElementById("sound1").play();
         //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
 
         //Notification if Supported by the Browser
         
+        /*
         if (!("Notification" in window)) {
             //alert("This browser does not support desktop notification");
         } else if (Notification.permission === "granted") {
@@ -183,11 +184,12 @@ error_reporting(E_ALL);
             Notification.requestPermission(function (permission) {
                 // If the user accepts, let's create a notification
                 if (permission === "granted") {
-                    var notification = new Notification("Hi there!");
+                    //var notification = new Notification("Hi there!");
         }
             });
 
         }
+        */
         
         PlaySoundKueche = false;
     }
