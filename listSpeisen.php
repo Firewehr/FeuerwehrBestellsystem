@@ -110,4 +110,4 @@ echo '</div>';
         TischAnsichtHistory();
     });
 
-</script>'
+</script>
