@@ -34,6 +34,8 @@ require_once('auth.php');
             var AnzahlOffeneBestellungenKueche = 0;
             var PlaySound = false;
             var PlaySoundKueche = false;
+            var PlaySoundSchank = false;
+            
             $(document).on({
                 ajaxStart: function () {
                     $.mobile.loading('show');
@@ -263,6 +265,64 @@ require_once('auth.php');
                 });
             }
 
+            function ProduktNeu() {
+                //dataString = "username=" + document.getElementById('username').value + "&password=" + document.getElementById('password').value + "&password_again=" + document.getElementById('password_again').value;
+                dataString = "Positionsname=" + $('#Positionsname').val() + "&Betrag=" + $('#Betrag').val() + "&type=" + $('#produktkategorie').val() + "&Kapazitaet=" + $('#Kapazitaet').val();
+
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "produktNeu.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+
+                    },
+                    success: function (text)
+                    {
+                        response = text;
+                        //alert(response);
+                        $('#produktname').val("");
+                        $('#produktkategorie').val("");
+                        $('#produktpreis').val("");
+                        $('#Kapazitaet').val("");
+                        AdminAnsicht();
+                    },
+                    error: onError
+                });
+            }
+
+            function ProduktLoeschen(rowid) {
+                var r = confirm("Wirklich löschen?");
+                if (r == true) {
+                    dataString = "rowid=" + rowid;
+
+                    $.ajax({
+                        type: "POST",
+                        async: true,
+                        dataType: "text",
+                        url: "produkt_loeschen.php",
+                        cache: false,
+                        data: dataString,
+                        complete: function (data) {
+
+                        },
+                        success: function (text)
+                        {
+                            response = text;
+                            //alert(response);
+                            AdminAnsicht();
+                        },
+                        error: onError
+                    });
+                } else {
+                    //"You pressed Cancel!";
+                }
+
+
+            }
+
             function kuecheFertig(rowid) {
                 $.ajax({
                     type: "GET",
@@ -332,16 +392,20 @@ require_once('auth.php');
             }
 
             function bestellungLoeschen(rowid, tischnummer) {
-                $.ajax({
-                    type: "GET",
-                    url: "bestellung_loeschen.php?rowid=" + rowid,
-                    cache: false,
-                    complete: function (data) {
-                        Summe = 0;
-                        TischAnsichtHistory();
-                    },
-                    error: onError
-                });
+
+                var r = confirm("Wirklich löschen?");
+                if (r == true) {
+                    $.ajax({
+                        type: "GET",
+                        url: "bestellung_loeschen.php?rowid=" + rowid,
+                        cache: false,
+                        complete: function (data) {
+                            Summe = 0;
+                            TischAnsichtHistory();
+                        },
+                        error: onError
+                    });
+                }
             }
 
             function onSuccess()
@@ -516,6 +580,7 @@ require_once('auth.php');
 
 
             function tisch() {
+                $("#listTischBestellungen").html("loading ...");
                 $('#listTischBestellungen').load('tisch_anzeigen.php?tischnummer=' + Tischnummer, function () {
                     $('#listTischBestellungen').trigger('create');
                 });
@@ -529,6 +594,7 @@ require_once('auth.php');
                 $.mobile.changePage('#listTischBestellungen');
             }
             function TischAnsicht() {
+                console.log("TischAnsicht()");
                 //$("#listTische").html("loading ...");
                 $.mobile.loading('show');
                 $('#listTische').load('list_tische.php', function () {
