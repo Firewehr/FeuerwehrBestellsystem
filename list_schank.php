@@ -191,7 +191,7 @@ error_reporting(E_ALL);
         }
         */
         
-        PlaySoundKueche = false;
+        PlaySoundSchank = false;
     }
     </script>
     <?php
