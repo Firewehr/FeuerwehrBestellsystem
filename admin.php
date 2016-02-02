@@ -19,40 +19,41 @@ require_once('auth.php');
             </form>
 
         </div>
-        <div id="neuerBenutzer" data-role="collapsible" data-collapsed="true">
-            <h3>Benutzer anlegen</h3>
 
-            <form>
-                <?php if (isset($message['error'])): ?>
-                    <fieldset class="error"><legend>Fehler</legend><?php echo $message['error'] ?></fieldset>
-                    <?php
-                endif;
-                if (isset($message['success'])):
-                    ?>
-                    <fieldset class="success"><legend>Erfolg</legend><?php echo $message['success'] ?></fieldset>
-                    <?php
-                endif;
-                if (isset($message['notice'])):
-                    ?>
-                    <fieldset class="notice"><legend>Hinweis</legend><?php echo $message['notice'] ?></fieldset>
-                <?php endif; ?>
-                <fieldset>
-
-                    <div><label for="username">Benutzername</label> <input type="text" name="f[username]" id="username"<?php echo isset($_POST['f']['username']) ? ' value="' . htmlspecialchars($_POST['f']['username']) . '"' : '' ?> /></div>
-                    <div><label for="password">Kennwort</label> <input type="password" name="f[password]" id="password" /></div>
-                    <div><label for="password_again">Kennwort wiederholen</label> <input type="password" name="f[password_again]" id="password_again" /></div>
-                </fieldset>
-                <fieldset>
-                    <div><input type="button" onclick="BenutzerNeu();" value="anlegen" /></div>
-                </fieldset>
-            </form>
-
-
-        </div>
 
         <div id="Benutzer" data-role="collapsible" data-collapsed="true">
             <h3>Benutzer</h3>
 
+            <div id="neuerBenutzer" data-role="collapsible" data-collapsed="true">
+                <h3>Benutzer anlegen</h3>
+
+                <form>
+                    <?php if (isset($message['error'])): ?>
+                        <fieldset class="error"><legend>Fehler</legend><?php echo $message['error'] ?></fieldset>
+                        <?php
+                    endif;
+                    if (isset($message['success'])):
+                        ?>
+                        <fieldset class="success"><legend>Erfolg</legend><?php echo $message['success'] ?></fieldset>
+                        <?php
+                    endif;
+                    if (isset($message['notice'])):
+                        ?>
+                        <fieldset class="notice"><legend>Hinweis</legend><?php echo $message['notice'] ?></fieldset>
+                    <?php endif; ?>
+                    <fieldset>
+
+                        <div><label for="username">Benutzername</label> <input type="text" name="f[username]" id="username"<?php echo isset($_POST['f']['username']) ? ' value="' . htmlspecialchars($_POST['f']['username']) . '"' : '' ?> /></div>
+                        <div><label for="password">Kennwort</label> <input type="password" name="f[password]" id="password" /></div>
+                        <div><label for="password_again">Kennwort wiederholen</label> <input type="password" name="f[password_again]" id="password_again" /></div>
+                    </fieldset>
+                    <fieldset>
+                        <div><input type="button" onclick="BenutzerNeu();" value="anlegen" /></div>
+                    </fieldset>
+                </form>
+
+
+            </div>
             <?php
             try {
                 include_once ("include/db.php");
@@ -73,30 +74,31 @@ require_once('auth.php');
             ?>
 
         </div>
-        <div id="Positionanlegen" data-role="collapsible" data-collapsed="true">
-            <h3>Position anlegen</h3>
-            <form>
-                <div><label for="Positionsname">Positionsname</label> <input type="text" name="f[Positionsname]" id="Positionsname"/></div>
-                <div><label for="produktkategorie">Produktkategorie</label>
-                    <select name="f[produktkategorie]" id="produktkategorie">
-                        <option value="1">Speise</option>
-                        <option value="2">Getränk</option>
-                    </select>
-                </div>
-                <div><label for="Betrag">Preis</label> <input type="text" name="f[Betrag]" id="Betrag" /></div>
-                <div><label for="Kapazitaet">Kapazität</label> <input value placeholder="Die maximal bestellbare Menge. -1 für unendlich" type="text" name="f[Kapazitaet]" id="Kapazitaet" /></div>
 
-                <fieldset>
-                    <div>
-                        <a onclick="ProduktNeu();" data-icon="check" data-role="button" data-inline="true" data-theme="a">Speichern</a>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
 
         <div id="Speisekarte" data-role="collapsible" data-collapsed="true">
             <h3>Speisekarte</h3>
 
+            <div id="Positionanlegen" data-role="collapsible" data-collapsed="true">
+                <h3>Position anlegen</h3>
+                <form>
+                    <div><label for="Positionsname">Positionsname</label> <input type="text" name="f[Positionsname]" id="Positionsname"/></div>
+                    <div><label for="produktkategorie">Produktkategorie</label>
+                        <select name="f[produktkategorie]" id="produktkategorie">
+                            <option value="1">Speise</option>
+                            <option value="2">Getränk</option>
+                        </select>
+                    </div>
+                    <div><label for="Betrag">Preis</label> <input type="text" name="f[Betrag]" id="Betrag" /></div>
+                    <div><label for="Kapazitaet">Kapazität</label> <input value placeholder="Die maximal bestellbare Menge. -1 für unendlich" type="text" name="f[Kapazitaet]" id="Kapazitaet" /></div>
+
+                    <fieldset>
+                        <div>
+                            <a onclick="ProduktNeu();" data-icon="check" data-role="button" data-inline="true" data-theme="a">Speichern</a>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
 
 
             <?php
@@ -158,7 +160,9 @@ require_once('auth.php');
 
 
             echo '<div id="Statistik" data-role="collapsible" data-collapsed="true">';
-            echo '<h3 class="ui-bar ui-bar-a">Statistik:</h3>';
+            echo '<h3 class="ui-bar ui-bar-a">Statistik</h3>';
+
+
             $sql4 = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM bestellungen");
             while ($row4 = mysqli_fetch_assoc($sql4)) {
                 echo "<li>Bestellungen Gesamt: " . utf8_encode($row4['cnt']) . "</li>";
@@ -176,7 +180,9 @@ require_once('auth.php');
             while ($row3 = mysqli_fetch_assoc($result)) {
                 echo "<li>Wartende Bestellungen: " . utf8_encode($row3['cnt']) . "</li>";
             }
-            echo '<h3>Kellner:</h3>';
+
+            echo '<div id="kellnerStat" data-role="collapsible" data-collapsed="true">';
+            echo '<h3>Kellner Verrechnete Positionen</h3>';
             $conn = mysqli_connect($hostname, $username, $password, $dbname);
 
             if (!$conn) {
@@ -187,22 +193,26 @@ require_once('auth.php');
             //echo $sql;
             $result = mysqli_query($conn, $sql);
             echo '<table>';
-            echo '<tr><th>Kellner</th><th>Anzahl Bestellungen</th><th>Betrag</th></tr>';
+            echo '<tr><th>Kellner</th><th>Anzahl</th><th>Betrag</th></tr>';
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td>' . $row['cnt'] . '</td><td>' . $row['summe'] . ' €</td></tr>';
+                echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td align="right">' . $row['cnt'] . '</td><td align="right">' . $row['summe'] . ' €</td></tr>';
             }
             echo '</table>';
+            echo '</div>';
 
 
             echo '<div id="Anzahl Aufgenommene Bestellungen" data-role="collapsible" data-collapsed="true">';
 
-            echo '<h2>Anzahl Aufgenommene Bestellungen</h2>';
+            echo '<h2>Kellner Aufgenommene Positionen</h2>';
             $sql = "SELECT kellner, COUNT(*) as anzahl FROM `bestellungen`,positionen WHERE bestellungen.position=positionen.rowid AND bestellungen.zeitKueche!='0000-00-00 00:00:00' AND bestellungen.delete=0 GROUP BY kellner";
             //echo $sql;
             $result = mysqli_query($conn, $sql);
             echo '<table>';
+            echo '<tr><th>Kellner</th><th>Anzahl</th></tr>';
+
+
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . $row['kellner'] . '</td><td>' . $row['anzahl'] . '</td></tr>';
+                echo '<tr><td>' . $row['kellner'] . '</td><td align="right">' . $row['anzahl'] . '</td></tr>';
             }
             echo '</table>';
             echo '</div>';
@@ -222,39 +232,18 @@ require_once('auth.php');
 
 
             echo '<div id="durchschnittliche wartezeit je Position" data-role="collapsible" data-collapsed="true">';
-            echo '<h2>durchschnittliche wartezeit je Position</h2>';
+            echo '<h2>Wartezeit je Position (Durchschnitt)</h2>';
             $sql = "SELECT positionen.Positionsname, AVG(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS avgzeit, COUNT(*) as anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete` = 0 AND `kueche` = 1 AND zeitKueche != '0000-00-00 00:00:00' GROUP BY bestellungen.position ORDER BY avgzeit DESC";
 
             $result = mysqli_query($conn, $sql);
             echo '<table>';
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . utf8_encode($row['Positionsname']) . '</td><td>' . $row['avgzeit'] . ' Minuten</td></tr>';
+                echo '<tr><td>' . utf8_encode($row['Positionsname']) . '</td><td align="right">' . $row['avgzeit'] . ' Minuten</td></tr>';
             }
             echo '</table>';
             echo '</div>';
 
-            echo '</div>';
-
-            echo '<div id="Wartezeit" data-role="collapsible" data-collapsed="true">';
-            echo '<h3>Wartezeit der offenen Bestellungen AKTUELL</h3>';
-            echo '<table><tr><th>Zeitpunkt Bestellungsaufnahme</th><th>Wartezeit Minuten:Sekunden </th></tr>';
-            $sql = "SELECT TIMEDIFF(now(),zeitstempel) as zeit, FLOOR( UNIX_TIMESTAMP( zeitstempel ) /120 ) AS t, COUNT( * )  FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00' GROUP BY t ORDER BY t DESC LIMIT 10";
-            $result = mysqli_query($conn, $sql);
-
-            while ($row4 = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>" . date("H:i", (($row4['t']) * 120)) . "</td><td>" . gmdate("i:s", ($row4['zeit'])) . "</td></tr>";
-            }
-            echo '</table>';
-
-            echo '<h3 class="ui-bar ui-bar-a">Wartezeit (2 Minuten Interval) (Aufnahme bis zur Fertigstellung in der Küche)</h3>';
-            echo '<table><tr><th>Zeitpunkt Bestellungsaufnahme</th><th>Wartezeit Minuten:Sekunden </th></tr>';
-            $result = mysqli_query($conn, "SELECT (zeitKueche-zeitstempel) as zeit, FLOOR( UNIX_TIMESTAMP( zeitstempel ) /360 ) AS t, COUNT( * )  FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete`=0 AND `kueche`=1 AND zeitKueche!='0000-00-00 00:00:00' AND positionen.type=1 GROUP BY t ORDER BY t DESC LIMIT 200");
-            while ($row4 = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>" . date("H:i", (($row4['t']) * 120)) . "</td><td>" . gmdate("i:s", ($row4['zeit'])) . "</td></tr>";
-            }
-            echo '</table>';
-
-
+            echo '<div id="durchschnittliche wartezeit je Position" data-role="collapsible" data-collapsed="true">';
             echo '<h3 class="ui-bar ui-bar-a">Speisen</h3>';
             echo '<table><tr><th>Name</th><th>Anzahl der Bestellungen</th></tr>';
             $result = mysqli_query($conn, "SELECT `positionen`.`Positionsname`, COUNT( * ) as cnt  FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete`=0 GROUP BY bestellungen.position ORDER BY cnt DESC");
@@ -262,6 +251,32 @@ require_once('auth.php');
                 echo "<tr><td>" . utf8_encode($row5['Positionsname']) . "</td><td>" . $row5['cnt'] . "</td></tr>";
             }
             echo '</table>';
+            echo '</div>';
+
+            echo '</div>';
+
+            echo '<div id="Wartezeit" data-role="collapsible" data-collapsed="true">';
+            echo '<h3>Wartezeit der AKTUELL offenen Bestellungen</h3>';
+            echo '<table><tr><th>Bestellung</th><th>Wartezeit</th></tr>';
+            $sql = "SELECT TIMEDIFF(now(),zeitstempel) as zeit, FLOOR( UNIX_TIMESTAMP( zeitstempel ) /120 ) AS t, COUNT( * )  FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00' GROUP BY t ORDER BY t DESC LIMIT 10";
+            $result = mysqli_query($conn, $sql);
+
+            while ($row4 = mysqli_fetch_assoc($result)) {
+//                echo "<tr><td>" . date("H:i", (($row4['t']) * 120)) . "</td><td>" . gmdate("i:s", ($row4['zeit'])) . "</td></tr>";
+                echo "<tr><td>" . date("H:i", (($row4['t']) * 120)) . "</td><td>" . $row4['zeit'] . "</td></tr>";
+            }
+            echo '</table>';
+/*
+            echo '<h3 class="ui-bar ui-bar-a">Wartezeit (2 Minuten Interval) (Aufnahme bis zur Fertigstellung in der Küche)</h3>';
+            echo '<table><tr><th>Zeitpunkt Bestellungsaufnahme</th><th>Wartezeit Minuten:Sekunden </th></tr>';
+            $result = mysqli_query($conn, "SELECT (zeitKueche-zeitstempel) as zeit, FLOOR( UNIX_TIMESTAMP( zeitstempel ) /360 ) AS t, COUNT( * )  FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00' GROUP BY t ORDER BY t DESC LIMIT 200");
+            while ($row4 = mysqli_fetch_assoc($result)) {
+                echo "<tr><td>" . date("H:i", (($row4['t']) * 120)) . "</td><td>" . gmdate("i:s", ($row4['zeit'])) . "</td></tr>";
+            }
+            echo '</table>';
+*/
+
+
             echo '</div>';
         } catch (Exception $e) {
             echo $e->getMessage();
