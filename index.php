@@ -21,6 +21,7 @@ require_once('auth.php');
 
         <script type="text/javascript">
 
+/*
             var Notification = window.Notification || window.mozNotification || window.webkitNotification;
             Notification.requestPermission();
 
@@ -28,7 +29,7 @@ require_once('auth.php');
             Notification.requestPermission(function (permission) {
                 console.log(permission);
             });
-
+*/
             $.mobile.defaultPageTransition = "fade";
             var AnzahlOffeneBestellungenSchank = 0;
             var AnzahlOffeneBestellungenKueche = 0;
