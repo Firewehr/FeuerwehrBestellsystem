@@ -21,22 +21,31 @@ require_once('auth.php');
 
         <script type="text/javascript">
 
-/*
-            var Notification = window.Notification || window.mozNotification || window.webkitNotification;
-            Notification.requestPermission();
+            window.onbeforeunload = function (e) {
+                //return 'Dialog text here.';
+                alert("Achtung Seite wird neu geladen!");
+            };
 
-
-            Notification.requestPermission(function (permission) {
-                console.log(permission);
+            $(document).ready(function () {
+                $.ajaxSetup({cache: false});
             });
-*/
+
+            /*
+             var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+             Notification.requestPermission();
+
+             
+             Notification.requestPermission(function (permission) {
+             console.log(permission);
+             });
+             */
             $.mobile.defaultPageTransition = "fade";
             var AnzahlOffeneBestellungenSchank = 0;
             var AnzahlOffeneBestellungenKueche = 0;
             var PlaySound = false;
             var PlaySoundKueche = false;
             var PlaySoundSchank = false;
-            
+
             $(document).on({
                 ajaxStart: function () {
                     $.mobile.loading('show');
@@ -396,17 +405,17 @@ require_once('auth.php');
 
                 var r = confirm("Wirklich löschen?");
                 if (r == true) {
-                    $.ajax({
-                        type: "GET",
-                        url: "bestellung_loeschen.php?rowid=" + rowid,
-                        cache: false,
-                        complete: function (data) {
-                            Summe = 0;
-                            TischAnsichtHistory();
-                        },
-                        error: onError
-                    });
-                }
+                $.ajax({
+                    type: "GET",
+                    url: "bestellung_loeschen.php?rowid=" + rowid,
+                    cache: false,
+                    complete: function (data) {
+                        Summe = 0;
+                        TischAnsichtHistory();
+                    },
+                    error: onError
+                });
+            }
             }
 
             function onSuccess()
@@ -482,11 +491,19 @@ require_once('auth.php');
         </div>
 
         <div data-role="page" id="adminPage">
+            <script>
+                $('#adminPage').live('pageshow', function (event, ui) {
+                    console.log("adminpageLoad");
+                    //you code
+
+                });
+
+            </script>
         </div>
 
 
         <div data-role="page" id="listTisch">
-            <a href="#indexPage">zurueck</a>
+
         </div>
 
         <div data-role="page" id="myOrdersPage">
@@ -498,13 +515,19 @@ require_once('auth.php');
         </div>
 
         <div data-role="page" id="Kuechenansicht">
-            <a href="#indexPage">zurueck</a>
+            <script>
+                $(document).ready(function () {
+                    Kuechenansicht();
+                });
+            </script>
         </div>
 
         <div data-role="page" id="Schankansicht">
+
         </div>
 
         <div data-role="page" id="listTische">
+            <a href="#indexPage">zurueck</a>
 
         </div>
 

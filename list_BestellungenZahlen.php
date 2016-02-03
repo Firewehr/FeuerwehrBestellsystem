@@ -21,9 +21,10 @@ try {
     $Summe = 0;
     $rowIDsBezahltAlle = "";
     $result = mysqli_query($conn, $sql);
+    $count=0;
 
     while ($row = mysqli_fetch_assoc($result)) {
-
+        $count++;
         $Colour = "white";
 
         $Summe+=$row['betrag'];
@@ -68,8 +69,8 @@ try {
 
     echo '<tr>';
     echo '<td colspan="4">';
-    if ($Summe > 0) {
-        echo '<a style="background-color:rgba(255, 255, 0,0.5)" onclick="$(\'#btnBezahlenGesamt\').hide();BestellungBezahlt(rowIDsBezahlt+rowIDsBezahltAlle);" class="ui-btn">Bezahlen</a>';
+    if ($count > 0) {
+    echo '<a style="background-color:rgba(255, 255, 0,0.5)" onclick="$(\'#btnBezahlenGesamt\').hide();BestellungBezahlt(rowIDsBezahlt+rowIDsBezahltAlle);" class="ui-btn">Bezahlen</a>';
     }
     echo '</td></tr>';
 } catch (Exception $e) {

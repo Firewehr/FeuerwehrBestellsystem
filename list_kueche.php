@@ -43,7 +43,7 @@ error_reporting(E_ALL);
                         $tischnummerselect = $row['tischnummer'];
 
                         $sql2 = "SELECT COUNT( * ) AS anzahl, `bestellungen`.`zeitKueche`, `bestellungen`.`position`, bestellungen.Zusatzinfo, `bestellungen`.`tischnummer`, `bestellungen`.`zeitstempel`, `positionen`.`rowid`, `positionen`.`Positionsname`, `positionen`.`type`, `bestellungen`.`kueche`, `bestellungen`.`delete`, `bestellungen`.`rowid`, FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  FROM bestellungen, positionen WHERE bestellungen.position=positionen.rowid AND `type`=1 AND  bestellungen.zeitKueche='0000-00-00 00:00:00' AND bestellungen.ausgeliefert=0 AND positionen.type=1 AND bestellungen.delete=0 AND bestellungen.tischnummer=" . $tischnummerselect . " AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " GROUP BY Zusatzinfo,Positionsname ORDER BY positionen.Positionsname ASC";
-
+                        
                         $result2 = mysqli_query($conn, $sql2);
 
                         while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der offenen Bestellungen eines Tisches
@@ -160,15 +160,15 @@ error_reporting(E_ALL);
         }
         ?></div></div>
 </div>
-<script>
-
-    if (AnzahlOffeneBestellungenKueche < 1) {
-        PlaySoundKueche = true;
-    }
+    <script>
+        
+        if (AnzahlOffeneBestellungenKueche < 1) {
+            PlaySoundKueche = true;
+        }
 
     if (AnzahlOffeneBestellungenKueche > 0 && PlaySoundKueche === true) { //
-        document.getElementById("sound1").play();
-        //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
+            document.getElementById("sound1").play();
+            //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
 
         //Notification if Supported by the Browser
         
@@ -189,9 +189,9 @@ error_reporting(E_ALL);
         }
         */
         
-        PlaySoundKueche = false;
-    }
-</script>
+            PlaySoundKueche = false;
+        }
+    </script>
 <?php
 echo "</div>";
 ?>
