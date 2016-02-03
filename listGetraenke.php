@@ -69,7 +69,6 @@ while ($rowww = mysqli_fetch_assoc($result)) {
         echo ' ' . $cnt . $text;
         echo '</button>';
         echo '</div>';
-
     } catch (Exception $e) {
         echo $e->getMessage();
     }
@@ -79,15 +78,17 @@ echo '</div>';
 echo '</div>';
 ?>
 <script>
+    
     $("#Getraenke").on("swipeleft", function () {
         console.log("swipeleft");
         $('#tabSpeisen').click();
     });
-    
-     $("#Getraenke").on("swiperight", function () {
+
+    $("#Getraenke").on("swiperight", function () {
         console.log("swiperight");
         //#listTische
         $.mobile.changePage('#listTische');
         TischAnsicht();
-    });   
+    });
+    
 </script>'
