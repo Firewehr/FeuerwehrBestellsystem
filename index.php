@@ -23,7 +23,7 @@ require_once('auth.php');
 
             window.onbeforeunload = function (e) {
                 //return 'Dialog text here.';
-                alert("Achtung Seite wird neu geladen!");
+                console.log("Achtung Seite wird neu geladen!");
             };
 
             $(document).ready(function () {
@@ -403,7 +403,7 @@ require_once('auth.php');
 
             function bestellungLoeschen(rowid, tischnummer) {
 
-                var r = confirm("Wirklich löschen?");
+                var r = confirm("Bestellung wirklich stornieren?");
                 if (r == true) {
                 $.ajax({
                     type: "GET",
@@ -492,11 +492,7 @@ require_once('auth.php');
 
         <div data-role="page" id="adminPage">
             <script>
-                $('#adminPage').live('pageshow', function (event, ui) {
-                    console.log("adminpageLoad");
-                    //you code
 
-                });
 
             </script>
         </div>

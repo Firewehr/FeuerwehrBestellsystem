@@ -1,3 +1,5 @@
+<a  href="#indexPage" data-theme="b" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Zurück</a>
+
 <?php
 
 require_once('auth.php');

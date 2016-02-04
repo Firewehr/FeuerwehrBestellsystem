@@ -10,9 +10,12 @@ try {
     $sql = "SELECT `bestellungen`.`tischnummer`,bestellungen.kellner,bestellungen.kellnerZahlung,bestellungen.timestampBezahlung, bestellungen.timestampBezahlung, bestellungen.Zusatzinfo, `positionen`.`Betrag` as betrag, `positionen`.`Positionsname`, `bestellungen`.`zeitKueche`,`bestellungen`.`position`, `positionen`.`rowid`, `bestellungen`.`zeitstempel`, `bestellungen`.`rowid`,`bestellungen`.`delete`,`bestellungen`.`kueche` AS kuechef FROM `bestellungen`, `positionen` WHERE  `positionen`.`rowid`=`bestellungen`.`position` AND `bestellungen`.`tischnummer`=" . $Tischnummer . ' AND `bestellungen`.`delete`=0 ORDER BY bestellungen.zeitstempel DESC LIMIT 30';
     $result1 = mysqli_query($conn, $sql);
     $Summe = 0;
-    echo '<table id="bestellungenTable" width="100%" data-role="table" data-mode="columntoggle" class="ui-responsive"><thead><tr><th>Name</th><th>Bestellung</th><th>Küche</th><th>Zahlung</th><th>&nbsp;</th></tr></thead>';
-    while ($row = mysqli_fetch_assoc($result1)) {
+    ?>
 
+    <?php
+    //echo '<table data-role="table" class="ui-responsive"><tbody>';
+    while ($row = mysqli_fetch_assoc($result1)) {
+        echo '<div style="border:1px solid black;">';
         $Colour = "";
         if ($row['zeitKueche'] == '0000-00-00 00:00:00') {
             $color = "rgba(255, 255, 0,0.1)";
@@ -32,57 +35,69 @@ try {
         }
 
 
-        echo '<tbody><tr style="background-color:' . $Colour . '">';
-
-        $Colour = "white";
-
-        $Summe+=$row['betrag'];
-
-        if ($row['kuechef'] == 1) {
-            $Colour = "yellow";
-        }
+        echo '<h2 style="background-color:' . $color . '">' . utf8_encode($row['Positionsname']) . '</h2>';
 
 
         $timestamp = strtotime($row['zeitstempel']);
-        //echo date("H:i:s", $timestamp);
-        echo '<td><b>' . utf8_encode($row['Positionsname']) . '</b><a data-role="button"  onclick=\'saveZusatzinfo(prompt("Zusatzinfo ' . htmlentities(utf8_encode($row['Positionsname']),ENT_QUOTES) . ':","' . $row['Zusatzinfo'] . '"),' . $row['rowid'] . ');\'>+Info</a>';
-        if (!empty($row['Zusatzinfo'])) {
-            echo '<p>' . $row['Zusatzinfo'] . '</p>';
-        }
-        echo '</td>';
-        echo '<td>' . date("H:i", $timestamp) . '<br>' . $row['kellner'] . '</td>';
-        echo '<td>' . date("H:i", strtotime($row['zeitKueche'])) . '</td>';
 
-        //echo '<td>' . $row['rowid'] . '</td>';
-        echo '<td>';
-        if ($row['zeitKueche'] == '0000-00-00 00:00:00') {
-            $color = "rgba(255, 255, 0,0.1)";
-            $class = "ui-icon-delete ui-btn-icon-right";
-            $onClick = 'bestellungLoeschen(' . $row['rowid'] . ',' . $Tischnummer . ');';
-            echo '<a href="#"  data-role="button" data-icon="delete" data-iconpos="notext" onclick="' . $onClick . '">Löschen</a>';
-        } elseif ($row['timestampBezahlung'] == '0000-00-00 00:00:00') {
-            $color = "rgba(240, 14, 0,0.5)";
-            $class = "ui-icon-delete ui-btn-icon-right";
-            $onClick = 'bestellungLoeschen(' . $row['rowid'] . ',' . $Tischnummer . ');';
-            echo '<a href="#"  data-role="button" data-icon="delete" data-iconpos="notext" onclick="' . $onClick . '">Löschen</a>';
-        } else {
-            $color = "rgba(51, 204, 51,0.1)";
-            $class = "";
-            $onClick = "";
-            echo date("H:i", strtotime($row['timestampBezahlung'])) . '<br>' . $row['kellnerZahlung'];
+        echo 'Bestellt: ' . date("H:i", $timestamp) . ' (' . $row['kellner'] . ')';
+        if ($row['zeitKueche'] !== '0000-00-00 00:00:00') {
+            echo '<br>Küche: ' . date("H:i", strtotime($row['zeitKueche'])) . '<br>';
         }
 
+        if ($row['timestampBezahlung'] == '0000-00-00 00:00:00') {
+            ?>
 
-        echo '</td>';
-        echo '</tr></tbody>';
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <?php
+                    echo '<a class="ui-btn ui-icon-info ui-btn-icon-top"  '
+                    . 'onclick=\'saveZusatzinfo(prompt("Zusatzinfo '
+                    . htmlentities(utf8_encode($row['Positionsname']), ENT_QUOTES) . ':","'
+                    . utf8_encode($row['Zusatzinfo']) . '"),' . $row['rowid'] . ');\'>'
+                    . utf8_encode($row['Zusatzinfo']) . '&nbsp;</a>';
+                    ?>
+                </div>
+
+                <div class="ui-block-b">
+                    <?php
+                    echo '<a href="#" class="' . "ui-btn ui-icon-delete ui-btn-icon-top"
+                    . '" onclick="'
+                    . 'bestellungLoeschen(' . $row['rowid'] . ',' . $Tischnummer . ');' . '">stornieren</a>';
+                    ?>
+                </div>
+            </div>
+            <?php
+        }
+        echo '</div>';
+
+
+
+        /*
+         * 
+          if ($row['zeitKueche'] == '0000-00-00 00:00:00') {
+          $color = "rgba(255, 255, 0,0.1)";
+          $class = "ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-right";
+          $onClick = 'bestellungLoeschen(' . $row['rowid'] . ',' . $Tischnummer . ');';
+          //echo '<a href="#" class="' . $class . '" onclick="' . $onClick . '"></a>';
+          } elseif ($row['timestampBezahlung'] == '0000-00-00 00:00:00') {
+          $color = "rgba(240, 14, 0,0.5)";
+          } else {
+          $color = "rgba(51, 204, 51,0.1)";
+          $class = "";
+          $onClick = "";
+          echo '<br>Zahlung: ' . date("H:i", strtotime($row['timestampBezahlung']));
+          echo ' (' . $row['kellnerZahlung'] . ')';
+          }
+         * 
+         */
+        //  echo '</td>';
+        // echo '</tr>';
     }
-    echo '</table>';
-
+    //echo '</tbody></table>';
 } catch (Exception $e) {
     echo $e->getMessage();
 }
-
-  
 ?>
 <script>
     $("#bestellungenTable").on("swiperight", function () {
