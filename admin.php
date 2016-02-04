@@ -57,16 +57,25 @@ require_once('auth.php');
             <?php
             try {
                 include_once ("include/db.php");
-                echo '<table widht="100%"><tr><th>Benutzer</th><th>Erstellungsdatum</th></tr>';
+                echo '<table data-role="table" data-mode="columntoggle" class="ui-responsive" id="myUsers">'
+                . '<thead>'
+                . '<tr>'
+                . '<th>Benutzer</th>'
+                . '<th>Erstellungsdatum</th>'
+                . '</tr>'
+                . '</thead>';
 
-                $sql = "SELECT * FROM `users` LIMIT 100";
+                $sql = "SELECT * FROM `users` ORDER BY username LIMIT 100";
                 $result = mysqli_query($conn, $sql);
+                echo '<tbody>';
 
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo '<tr>';
                     echo '<td>' . $row['username'] . '</td><td>' . $row['timestamp'] . '</td';
                     echo '</tr>';
                 }
+
+                echo '</tbody>';
                 echo '</table>';
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -107,7 +116,15 @@ require_once('auth.php');
                 include_once ("include/db.php");
 
                 $result4 = mysqli_query($conn, "SELECT * FROM positionen");
-                echo '<table widht="100%"><tr><th>Position</th><th>Betrag</th><th>Bestellt</th><th>Rest</th><th>-</th></tr>';
+                echo '<table data-role="table" data-mode="columntoggle" class="ui-responsive" id="mySpeisekarte">'
+                . '<thead><tr>'
+                . '<th data-priority="1">Position</th>'
+                . '<th data-priority="1">Betrag</th>'
+                . '<th data-priority="3">Bestellt</th>'
+                . '<th data-priority="2">Rest</th>'
+                . '<th data-priority="1">&nbsp;</th></tr>'
+                . '</thead>';
+                echo '<tbody>';
                 while ($row4 = mysqli_fetch_assoc($result4)) {
 
                     //echo $row4['rowid'];
@@ -136,16 +153,17 @@ require_once('auth.php');
 
                     echo '<tr><td>';
                     echo utf8_encode($row4['Positionsname']);
-                    echo '</td><td>';
+                    echo '</td><td>€ ';
                     echo utf8_encode($row4['Betrag']);
                     echo '</td><td>';
                     echo $anzahlBestellt . ' von ' . $maxBestellbar;
                     echo '</td><td>';
                     echo $rest . ' ' . $text;
                     echo '</td><td>';
-                    echo '<a onclick="ProduktLoeschen(' . $row4['rowid'] . ')">löschen</a>';
+                    echo '<a onclick="ProduktLoeschen(' . $row4['rowid'] . ')" href="#" class="ui-btn ui-icon-delete ui-btn-icon-left"></a>';
                     echo '</td></tr>';
                 }
+                echo '</tbody>';
                 echo '</table>';
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -176,13 +194,10 @@ require_once('auth.php');
                 echo "<li>Stornierte Bestellungen: " . utf8_encode($row['cnt']) . "</li>";
             }
 
-            $result = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00'");
-            while ($row3 = mysqli_fetch_assoc($result)) {
-                echo "<li>Wartende Bestellungen: " . utf8_encode($row3['cnt']) . "</li>";
-            }
+
 
             echo '<div id="kellnerStat" data-role="collapsible" data-collapsed="true">';
-            echo '<h3>Kellner Verrechnete Positionen</h3>';
+            echo '<h3>Kellner Abgerechnete Positionen</h3>';
             $conn = mysqli_connect($hostname, $username, $password, $dbname);
 
             if (!$conn) {
@@ -223,11 +238,11 @@ require_once('auth.php');
             $sql = "SELECT SUM( positionen.betrag ) as summe , tische.tischname FROM `bestellungen` , positionen, tische WHERE tische.tischnummer = bestellungen.tischnummer AND bestellungen.position = positionen.rowid AND bestellungen.zeitKueche != '0000-00-00 00:00:00' AND bestellungen.delete =0 GROUP BY bestellungen.tischnummer ORDER BY tische.tischname ASC";
 
             $result = mysqli_query($conn, $sql);
-            echo '<table>';
+            echo '<table data-mode="columntoggle"><thead><th>Tisch#</th><th>Umsatz</th></thead><tbody>';
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . $row['tischname'] . '</td><td>' . $row['summe'] . '€</td></tr>';
+                echo '<tr><td>' . $row['tischname'] . '</td><td align="right">' . $row['summe'] . ' €</td></tr>';
             }
-            echo '</table>';
+            echo '</tbody></table>';
             echo '</div>';
 
 
@@ -245,17 +260,25 @@ require_once('auth.php');
 
             echo '<div id="durchschnittliche wartezeit je Position" data-role="collapsible" data-collapsed="true">';
             echo '<h3 class="ui-bar ui-bar-a">Speisen</h3>';
-            echo '<table><tr><th>Name</th><th>Anzahl der Bestellungen</th></tr>';
+            echo '<table><thead><tr><th>Name</th><th>xBestellt</th></tr></thead><tbody>';
             $result = mysqli_query($conn, "SELECT `positionen`.`Positionsname`, COUNT( * ) as cnt  FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete`=0 GROUP BY bestellungen.position ORDER BY cnt DESC");
             while ($row5 = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>" . utf8_encode($row5['Positionsname']) . "</td><td>" . $row5['cnt'] . "</td></tr>";
+                echo "<tr><td>" . utf8_encode($row5['Positionsname']) . "</td><td align=\"right\">" . $row5['cnt'] . "</td></tr>";
             }
-            echo '</table>';
+            echo '</tbody></table>';
             echo '</div>';
 
             echo '</div>';
 
             echo '<div id="Wartezeit" data-role="collapsible" data-collapsed="true">';
+            
+            $result = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00'");
+            while ($row3 = mysqli_fetch_assoc($result)) {
+                //echo "<li>Wartende Bestellungen: " . utf8_encode($row3['cnt']) . "</li>";
+                echo '<h3>AKTUELL '. utf8_encode($row3['cnt']) . ' Positionen wartend</h3>';
+            }
+            
+
             echo '<h3>Wartezeit der AKTUELL offenen Bestellungen</h3>';
             echo '<table><tr><th>Bestellung</th><th>Wartezeit</th></tr>';
             $sql = "SELECT TIMEDIFF(now(),zeitstempel) as zeit, FLOOR( UNIX_TIMESTAMP( zeitstempel ) /120 ) AS t, COUNT( * )  FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00' GROUP BY t ORDER BY t DESC LIMIT 10";
@@ -266,15 +289,7 @@ require_once('auth.php');
                 echo "<tr><td>" . date("H:i", (($row4['t']) * 120)) . "</td><td>" . $row4['zeit'] . "</td></tr>";
             }
             echo '</table>';
-/*
-            echo '<h3 class="ui-bar ui-bar-a">Wartezeit (2 Minuten Interval) (Aufnahme bis zur Fertigstellung in der Küche)</h3>';
-            echo '<table><tr><th>Zeitpunkt Bestellungsaufnahme</th><th>Wartezeit Minuten:Sekunden </th></tr>';
-            $result = mysqli_query($conn, "SELECT (zeitKueche-zeitstempel) as zeit, FLOOR( UNIX_TIMESTAMP( zeitstempel ) /360 ) AS t, COUNT( * )  FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00' GROUP BY t ORDER BY t DESC LIMIT 200");
-            while ($row4 = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>" . date("H:i", (($row4['t']) * 120)) . "</td><td>" . gmdate("i:s", ($row4['zeit'])) . "</td></tr>";
-            }
-            echo '</table>';
-*/
+
 
 
             echo '</div>';

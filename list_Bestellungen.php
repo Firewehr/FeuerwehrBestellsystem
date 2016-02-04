@@ -15,7 +15,7 @@ try {
     <?php
     //echo '<table data-role="table" class="ui-responsive"><tbody>';
     while ($row = mysqli_fetch_assoc($result1)) {
-        echo '<div style="border:1px solid black;">';
+        
         $Colour = "";
         if ($row['zeitKueche'] == '0000-00-00 00:00:00') {
             $color = "rgba(255, 255, 0,0.1)";
@@ -34,8 +34,8 @@ try {
             $Colour = "lightgray";
         }
 
-
-        echo '<h2 style="background-color:' . $color . '">' . utf8_encode($row['Positionsname']) . '</h2>';
+        echo '<div style="border:1px solid black;background-color:' . $color . '">';
+        echo '<h2>' . utf8_encode($row['Positionsname']) . '</h2>';
 
 
         $timestamp = strtotime($row['zeitstempel']);

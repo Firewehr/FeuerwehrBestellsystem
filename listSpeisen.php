@@ -62,7 +62,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         if ($maxBestellbar > 0) {
 
             if (($maxBestellbar - $anzahlBestellt) <= 0) {
-                $text = "nicht mehr Verfügbar!";
+                $text = " AUSVERKAUFT!";
                 $Colour = "red";
             } else if (($maxBestellbar - $anzahlBestellt) < 10) {
                 $text = " (nur noch " . ($maxBestellbar - $anzahlBestellt) . 'x verfügbar)';
