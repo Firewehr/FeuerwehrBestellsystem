@@ -14,7 +14,9 @@ require_once('auth.php');
 
             <form>
                 <p>Tischname:<input id="neuerTischName" type="text" value=""></p>
-                <p>Tischnummer:<input id="neueTischNummer" type="number" value=""></p>
+                <p>Farbe:<input id="neueTischFarbe" type="text" value=""></p>
+                <p>X:<input id="neueTischX" type="number" value=""></p>
+                <p>Y:<input id="neueTischY" type="number" value=""></p>
                 <input type="button" onclick="saveNeuerTisch();" value="Speichern">
             </form>
 
@@ -118,6 +120,7 @@ require_once('auth.php');
                 $result4 = mysqli_query($conn, "SELECT * FROM positionen");
                 echo '<table data-role="table" data-mode="columntoggle" class="ui-responsive" id="mySpeisekarte">'
                 . '<thead><tr>'
+                . '<th data-priority="3">Reihung</th>'
                 . '<th data-priority="1">Position</th>'
                 . '<th data-priority="1">Betrag</th>'
                 . '<th data-priority="3">Bestellt</th>'
@@ -151,7 +154,10 @@ require_once('auth.php');
                         }
                     }
 
-                    echo '<tr><td>';
+                    echo '<tr>'
+                    . '<td>';
+                    echo $row4['reihenfolge'];
+                    echo '</td><td>';
                     echo utf8_encode($row4['Positionsname']);
                     echo '</td><td>€ ';
                     echo utf8_encode($row4['Betrag']);
@@ -271,13 +277,13 @@ require_once('auth.php');
             echo '</div>';
 
             echo '<div id="Wartezeit" data-role="collapsible" data-collapsed="true">';
-            
+
             $result = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00'");
             while ($row3 = mysqli_fetch_assoc($result)) {
                 //echo "<li>Wartende Bestellungen: " . utf8_encode($row3['cnt']) . "</li>";
-                echo '<h3>AKTUELL '. utf8_encode($row3['cnt']) . ' Positionen wartend</h3>';
+                echo '<h3>AKTUELL ' . utf8_encode($row3['cnt']) . ' Positionen wartend</h3>';
             }
-            
+
 
             echo '<h3>Wartezeit der AKTUELL offenen Bestellungen</h3>';
             echo '<table><tr><th>Bestellung</th><th>Wartezeit</th></tr>';

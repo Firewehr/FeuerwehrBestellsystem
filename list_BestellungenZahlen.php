@@ -48,7 +48,7 @@ try {
         echo '<input type="button" id="plus' . $row['rowidBestellung'] . '" onclick="$(\'#plus' . $row['rowidBestellung'] . '\').hide();'
                 . 'BetragEinzelnBezahlen=BetragEinzelnBezahlen+' . $row['betrag'] .
                 ';$(\'#zeile' . $row['rowidBestellung'] . '\').css(\'background-color\', \'#66ff66\');' . 
-                ';$(\'#summeZahlung\').text(BetragEinzelnBezahlen.toFixed(2) + \' EUR\');'
+                '$(\'#summeZahlung\').text(BetragEinzelnBezahlen.toFixed(2) + \' EUR\');'
                 . 'rowIDsBezahltAlle=``; $(\'#btnBezahlenGesamt\').hide();'
                 . 'rowIDsBezahlt=rowIDsBezahlt+\'' . $row['rowidBestellung'] . ' OR rowid=\'" value="&nbsp;+&nbsp;"/>';
         echo '</td>';
@@ -81,10 +81,12 @@ echo '<script>rowIDsBezahltAlle="' . $rowIDsBezahltAlle . '";</script>';
 echo '</div>';
 ?>
 <script>
+    
      $("#BestellungZahlen").on("swiperight", function () {
         console.log("swiperight");
         //#listTische
         $.mobile.changePage('#listTischBestellungen');
         tisch();
     });   
+    
 </script>

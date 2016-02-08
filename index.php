@@ -33,7 +33,7 @@ require_once('auth.php');
             /*
              var Notification = window.Notification || window.mozNotification || window.webkitNotification;
              Notification.requestPermission();
-
+             
              
              Notification.requestPermission(function (permission) {
              console.log(permission);
@@ -124,9 +124,16 @@ require_once('auth.php');
             });
             function saveNeuerTisch() {
                 neuerTischName = document.getElementById('neuerTischName').value;
-                neueTischNummer = document.getElementById('neueTischNummer').value;
-                dataString = "neuerTischName=" + neuerTischName + "&neueTischNummer=" + neueTischNummer;
-                if (neueTischNummer.length > 0 && neuerTischName.length > 0) {
+                neueTischFarbe = $('#neueTischFarbe').val();
+                neueTischX = $('#neueTischX').val();
+                neueTischY =  $('#neueTischY').val();
+                dataString = "neuerTischName=" + neuerTischName
+                        + "&neueTischFarbe=" + neueTischFarbe
+                        + "&neueTischX=" + neueTischX
+                        + "&neueTischY=" + neueTischY;
+                
+                
+                if (neuerTischName.length > 0) {
                     $.ajax({
                         type: "POST",
                         async: false,
@@ -136,7 +143,10 @@ require_once('auth.php');
                         data: dataString,
                         complete: function (data, responseText) {
                             document.getElementById('neuerTischName').value = "";
-                            document.getElementById('neueTischNummer').value = "";
+                            $('#neueTischFarbe').val("");
+                            $('#neueTischX').val("");
+                            $('#neueTischY').val("");
+                            
                         },
                         success: function (text)
                         {
@@ -405,17 +415,17 @@ require_once('auth.php');
 
                 var r = confirm("Bestellung wirklich stornieren?");
                 if (r == true) {
-                $.ajax({
-                    type: "GET",
-                    url: "bestellung_loeschen.php?rowid=" + rowid,
-                    cache: false,
-                    complete: function (data) {
-                        Summe = 0;
-                        TischAnsichtHistory();
-                    },
-                    error: onError
-                });
-            }
+                    $.ajax({
+                        type: "GET",
+                        url: "bestellung_loeschen.php?rowid=" + rowid,
+                        cache: false,
+                        complete: function (data) {
+                            Summe = 0;
+                            TischAnsichtHistory();
+                        },
+                        error: onError
+                    });
+                }
             }
 
             function onSuccess()
