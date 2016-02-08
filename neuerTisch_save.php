@@ -12,12 +12,11 @@ $neueTischX = intval($_POST['neueTischX']);
 $neueTischY = intval($_POST['neueTischY']);
 
 $sql = "INSERT `tische` SET "
-        . "`tischnummer`='$tischnummer',"
         . "`tischname`='$tischname',"
         . "`x`=$neueTischX,"
         . "`y`=$neueTischY,"
         . "`color`=\"$neueTischFarbe\"";
-echo $sql;
+//echo $sql;
 
 if (!mysqli_query($conn, $sql)) {
     die('Error: ' . utf8_encode(mysqli_error($conn)));
