@@ -490,6 +490,9 @@ require_once('auth.php');
                         <a href="#adminPage" id="AdminButton">Admin</a>
                     </li>
                     <li>
+                        <a href="backup_download.php" target="_blank">Sicherung Starten</a>
+                    </li>
+                    <li>
                         <a href="logout.php">als <?php echo htmlspecialchars($_SESSION['user']['username']); ?> abmelden</a>
                     </li>
                 </ul>
