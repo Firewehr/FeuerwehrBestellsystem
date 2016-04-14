@@ -2,14 +2,14 @@
 
 
 header('Content-Type: application/octet-stream');
-header('Content-Disposition: attachment; filename=' . basename(date("Y-m-d_H-i",time()). '_Backup_Bestellsystem.html'));
+header('Content-Disposition: attachment; filename=' . basename(date("Y-m-d_H-i-s",time()). '_Backup_Speisen_Bestellsystem.html'));
 header('Expires: 0');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
 //header('Content-Length: ' . filesize('file.txt'));
 
 include_once ("include/db.php");
-
+echo '<h1>Speisen</h1>';
 $tischnummerselect = "";
 try {
     include_once ("include/db.php");
