@@ -97,6 +97,53 @@ require_once('auth.php');
                 });
             }
 
+
+
+            function updateSpeisekarte(tischnummer) {
+                console.log("UpdateSpeisekarte");
+
+                $.ajax({
+                    url: 'tisch_json.php?tischnummer=' + tischnummer,
+                    type: "get",
+                    success: function (data) {
+                        html = "";
+                        html += '<div class="ui-grid-a">';
+                        i = 0;
+                        $.each(data, function (i, object) {
+                            i++;
+                            if (i === 1) {
+                                html += '<div class="ui-block-a">';
+                            } else {
+                                html += '<div class="ui-block-b">';
+                                i = 0;
+                            }
+                            //html+=;
+                            html += '<button class="ui-btn ui-corner-all" onclick="saveBestellung('+ object['id'] + ',0,11);" select="" count(*)="" as="" cnt="" from="" `bestellungen`="" where="" `delete`="0" and="" position="9Anzahl153" style="white-space: normal; !important; color:#B18904; height: 80px;background:' + object['cl'] + ';">';
+                            html += object["P"];
+                            if (object["nr"] !== "") {
+                                html += ' (' + object["nr"] + 'x)';
+                            }
+
+                            html += '</button>'
+
+
+
+                            html += '</div>';
+
+
+
+
+                            //alert(object["P"]);
+                            //speisekarteTest <-- DIV
+
+                        });
+                        html += '</div>';
+                        $('#speisekarteTest').html(html);
+                    },
+                    dataType: "json"
+                });
+            }
+
             $(document).ready(function () {
                 $("#KuecheButton").click(function () {
                     Kuechenansicht();
@@ -126,13 +173,13 @@ require_once('auth.php');
                 neuerTischName = document.getElementById('neuerTischName').value;
                 neueTischFarbe = $('#neueTischFarbe').val();
                 neueTischX = $('#neueTischX').val();
-                neueTischY =  $('#neueTischY').val();
+                neueTischY = $('#neueTischY').val();
                 dataString = "neuerTischName=" + neuerTischName
                         + "&neueTischFarbe=" + neueTischFarbe
                         + "&neueTischX=" + neueTischX
                         + "&neueTischY=" + neueTischY;
-                
-                
+
+
                 if (neuerTischName.length > 0) {
                     $.ajax({
                         type: "POST",
@@ -146,7 +193,7 @@ require_once('auth.php');
                             $('#neueTischFarbe').val("");
                             $('#neueTischX').val("");
                             $('#neueTischY').val("");
-                            
+
                         },
                         success: function (text)
                         {
@@ -163,8 +210,10 @@ require_once('auth.php');
             }
 
             function saveBestellung(position, tab, tischnummer) {
+                console.log("saveBestellung");
                 $.mobile.loading('show');
-                dataString = "Tischnummer=" + Tischnummer + "&positionsid=" + position + "&Zusatzinfo=" + Beilagen;
+                dataString = "Tischnummer=" + tischnummer + "&positionsid=" + position + "&Zusatzinfo=" + Beilagen;
+                console.log(dataString);
                 //Wenn Speisen gespeichert werden sollen...
 
                 /*
@@ -186,6 +235,7 @@ require_once('auth.php');
                     data: dataString,
                     complete: function (data) {
                         $('#TischAnzeigen').tabs('load', tab);
+                        console.log("Bestellung saved for Tisch " + tischnummer);
                         Summe = 0;
                     },
                     error: onError
@@ -495,7 +545,13 @@ require_once('auth.php');
                     <li>
                         <a href="logout.php">als <?php echo htmlspecialchars($_SESSION['user']['username']); ?> abmelden</a>
                     </li>
+
+
                 </ul>
+                <!--<button onclick="updateSpeisekarte(11);">Speisekarte</button>-->
+                <div id="speisekarteTest">
+
+                </div>
             </div>
 
             <div data-role="footer">
