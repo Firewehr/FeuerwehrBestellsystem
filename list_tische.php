@@ -126,7 +126,8 @@ require_once('auth.php');
 
                             //Erstellt einen leeren div Block
                             echo '<div class="ui-block-' . $char . '">';
-                            echo '<button class="ui-btn ui-corner-all big" style="color:#' . $fontColour . ';background:#FFFFFF;">'; //font-size:13px;
+                            echo '<button class="ui-btn ui-corner-all big" style="color:#' 
+                            . $fontColour . ';background:#FFFFFF;">';
                             //echo $countx; //DEBUG
                             echo '&nbsp;';
                             echo '</button>';
@@ -160,7 +161,8 @@ require_once('auth.php');
 
                             //Erstellt einen leeren div Block
                             echo '<div class="ui-block-' . $char . '">';
-                            echo '<button class="ui-btn ui-corner-all big" style="color:#' . $fontColour . ';background:#FFFFFF;">'; //font-size:13px;
+                            echo '<button class="ui-btn ui-corner-all big" '
+                            . 'style="color:#' . $fontColour . ';background:#FFFFFF;">'; //font-size:13px;
                             echo "&nbsp;";
                             echo '</button>';
                             echo '</div>';
@@ -189,27 +191,29 @@ require_once('auth.php');
 
                     $result2 = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM bestellungen WHERE `delete`=0 AND `timestampBezahlung`=\"0000-00-00 00:00:00\"  AND tischnummer=" . $tischnummerabfrage);
                     while ($roww = mysqli_fetch_assoc($result2)) {
-                        //echo $roww['cnt'];
 
                         if ($roww['cnt'] > 0) {
                             $Colour = "#F5F599";
+                            $style="tischy";
                         }
 
                         if ($roww['cnt'] == 0) {
                             $Colour = "LightGreen";
+                            $style="tischgr";
                         }
                     }
                     echo '<div class="ui-block-' . $char . '">';
 
                     if ($row['color'] !== "") {
                         $fontColour = $row['color'];
+                        
                     } else {
                         $fontColour = "000000";
+                        
                     }
-                    echo '<button class="ui-btn ui-corner-all big" onclick="Tischnummer=' . $row['tischnummer'] . ';tisch();" style="color:#' . $fontColour . ';background:' . $Colour . ';">'; //font-size:13px;
+                    echo '<button class="ui-btn ui-corner-all big" onclick="Tischnummer=' . $row['tischnummer'] . ';tisch();" '
+                            . 'style="color:#' . $fontColour . ';background:' . $Colour . ';">';
                     echo $row['tischname'];
-                    //echo $row['x'] . "," . $row['y']; //DEBUG
-                    //echo "&nbsp;&nbsp;" . $row['tischname'] . "&nbsp;&nbsp;";
 
                     echo '</button>';
                     echo '</div>';

@@ -22,6 +22,7 @@ error_reporting(E_ALL);
                     include_once ("include/db.php");
                     $counter = 0;
                     $sql = "SELECT `positionen`.`type`,tische.tischname, bestellungen.tischnummer, FLOOR( UNIX_TIMESTAMP(  bestellungen.zeitstempel ) /300 ) AS t, COUNT( * ), kellner FROM bestellungen, positionen,tische WHERE tische.tischnummer=bestellungen.tischnummer AND bestellungen.position=positionen.rowid AND `delete`=0 AND `kueche`=0 AND `type`=2 GROUP BY t, bestellungen.tischnummer ORDER BY bestellungen.zeitstempel, t LIMIT 50";
+                    
                     $result = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($result)) {
                         $Bestellungen = "";
@@ -68,7 +69,7 @@ error_reporting(E_ALL);
                         echo '<div class="ui-block-b">';
                         //Bereits hergerichtete Positionen
                         $query = "SELECT bestellungen.kueche, COUNT( * ) AS anzahl, `bestellungen`.`zeitKueche`, bestellungen.Zusatzinfo, `bestellungen`.`position`, `bestellungen`.`tischnummer`, `bestellungen`.`zeitstempel`, `positionen`.`rowid`, `positionen`.`Positionsname`, `positionen`.`type`, `bestellungen`.`kueche`, `bestellungen`.`delete`, `bestellungen`.`rowid`, FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  FROM bestellungen, positionen WHERE bestellungen.position=positionen.rowid AND bestellungen.ausgeliefert=0 AND positionen.type=2 AND bestellungen.delete=0 AND bestellungen.zeitKueche!='0000-00-00 00:00:00' AND bestellungen.tischnummer=" . $tischnummerselect . " AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " GROUP BY Zusatzinfo, bestellungen.position ORDER BY `bestellungen`.`zeitKueche` DESC";
-
+                        
                         $result2 = mysqli_query($conn, $query);
 
                         while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der bereits gerichteten Bestellungen
@@ -139,6 +140,7 @@ error_reporting(E_ALL);
         try {
             include_once ("include/db.php");
             $sql6 = "SELECT bestellungen.position, positionen.rowid, positionen.positionsname, COUNT( * ) AS anzahl FROM positionen, bestellungen WHERE bestellungen.position = positionen.rowid AND bestellungen.kueche=0 AND positionen.type=2 AND bestellungen.delete=0 GROUP BY bestellungen.position ORDER BY anzahl DESC";
+            //echo $sql6;
             $query6 = mysqli_query($conn, $sql6);
             while ($row = mysqli_fetch_assoc($query6)) {
 
