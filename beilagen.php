@@ -1,5 +1,5 @@
 <?php
-
+//Beilagen
 $position = intval($_GET['position']);
 
 error_reporting(E_ALL);
