@@ -48,7 +48,7 @@ error_reporting(E_ALL);
                         $result2 = mysqli_query($conn, $sql2);
 
                         while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der offenen Bestellungen eines Tisches
-                            echo '<input style="background-color:#FFFF99; color:#f00;" type="button" value="(' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Kurzbezeichnung']);
+                            echo '<input style="background-color:#FFFF99; color:#f00;" type="button" value="(' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']);
                             if (!empty($row2['Zusatzinfo'])) {
                                 echo ' (' . $row2['Zusatzinfo'] . ') ';
                             }
