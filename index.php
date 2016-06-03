@@ -19,6 +19,45 @@ require_once('auth.php');
         <script src="include/jquery/jquery-2.1.4.min.js"></script>
         <script src="include/jquery/jquery.mobile-1.4.5.js"></script>
 
+
+        <script type="text/javascript">
+            //Test HTML IndexedDB
+            var request = indexedDB.open("speisekarte");
+
+            request.onupgradeneeded = function () {
+                // The database did not previously exist, so create object stores and indexes.
+                var db = request.result;
+                var store = db.createObjectStore("positionen", {keyPath: "rowid"});
+                //var titleIndex = store.createIndex("by_title", "title", {unique: true});
+                //var authorIndex = store.createIndex("by_author", "author");
+
+                // Populate with initial data.
+                store.put({Positionsname: "Grillhendl", Kurzbezeichnung: "Grillhendl", rowid: 71});
+<?php
+include_once ("include/db.php");
+
+
+$sql1 = "SELECT * FROM positionen ORDER BY type, reihenfolge";
+$result1 = mysqli_query($conn, $sql1);
+$fontColour = "#000000";
+$Colour = "#FFFFFF";
+
+include_once ("include/db.php");
+$i = 0;
+while ($rowww = mysqli_fetch_assoc($result1)) {
+    echo 'store.put({Positionsname: "' . utf8_encode($rowww['Positionsname'])
+    . '", Kurzbezeichnung: "'
+    . utf8_encode($rowww['Kurzbezeichnung']) . '", rowid: ' . $rowww['rowid'] . '});';
+}
+?>
+                //store.put({title: "Water Buffaloes", author: "Fred", isbn: 234567});
+                //store.put({title: "Bedrock Nights", author: "Barney", isbn: 345678});
+            };
+
+            request.onsuccess = function () {
+                db = request.result;
+            };
+        </script>
         <script type="text/javascript">
 
             window.onbeforeunload = function (e) {
@@ -118,7 +157,7 @@ require_once('auth.php');
                                 i = 0;
                             }
                             //html+=;
-                            html += '<button class="ui-btn ui-corner-all" onclick="saveBestellung('+ object['id'] + ',0,11);" select="" count(*)="" as="" cnt="" from="" `bestellungen`="" where="" `delete`="0" and="" position="9Anzahl153" style="white-space: normal; !important; color:#B18904; height: 80px;background:' + object['cl'] + ';">';
+                            html += '<button class="ui-btn ui-corner-all" onclick="saveBestellung(' + object['id'] + ',0,11);" select="" count(*)="" as="" cnt="" from="" `bestellungen`="" where="" `delete`="0" and="" position="9Anzahl153" style="white-space: normal; !important; color:#B18904; height: 80px;background:' + object['cl'] + ';">';
                             html += object["P"];
                             if (object["nr"] !== "") {
                                 html += ' (' + object["nr"] + 'x)';
@@ -209,10 +248,10 @@ require_once('auth.php');
 
             }
 
-            function saveBestellung(position, tab, tischnummer) {
+            function saveBestellung(position, tab, tischnummer, fertig) {
                 console.log("saveBestellung");
                 $.mobile.loading('show');
-                dataString = "Tischnummer=" + tischnummer + "&positionsid=" + position + "&Zusatzinfo=" + Beilagen;
+                dataString = "Tischnummer=" + tischnummer + "&positionsid=" + position + "&Zusatzinfo=" + Beilagen + "&kuechefertig=" + fertig;
                 console.log(dataString);
                 //Wenn Speisen gespeichert werden sollen...
 
@@ -234,7 +273,11 @@ require_once('auth.php');
                     cache: false,
                     data: dataString,
                     complete: function (data) {
-                        $('#TischAnzeigen').tabs('load', tab);
+                        if (fertig === 1) {
+                            $('#TischAnzeigenDirektverkauf').tabs('load', tab);
+                        } else {
+                            $('#TischAnzeigen').tabs('load', tab);
+                        }
                         console.log("Bestellung saved for Tisch " + tischnummer);
                         Summe = 0;
                     },
@@ -406,14 +449,18 @@ require_once('auth.php');
                 });
             }
 
-            function BestellungBezahlt(sql) {
+            function BestellungBezahlt(sql, direktverkauf) {
                 $.ajax({
                     type: "GET",
                     url: "BestellungBezahlt.php?rowid=" + sql,
                     cache: false,
                     //data: formData,
                     complete: function (data) {
-                        TischBezahlen();
+                        if (direktverkauf === 1) {
+                            Direktverkauf();
+                        } else {
+                            TischBezahlen();
+                        }
                     },
                     error: onError
                 });
@@ -532,7 +579,10 @@ require_once('auth.php');
                     </li>
                     <li>
                         <a href="#Schankansicht" id="SchankButton">Schank</a>
-                    </li>            
+                    </li>
+                    <li>
+                        <a href="#Direktverkauf" id="DirektverkaufButton" onclick="Direktverkauf()">Direktverkauf</a>
+                    </li>    
                     <li>
                         <a href="#myOrdersPage" id="myOrdersButton" onclick="myOrdersAnsicht();">Meine Bestellungen</a>
                     </li>            
@@ -569,6 +619,10 @@ require_once('auth.php');
 
         <div data-role="page" id="listTisch">
 
+        </div>
+
+
+        <div data-role="page" id="Direktverkauf">
         </div>
 
         <div data-role="page" id="myOrdersPage">
@@ -745,6 +799,16 @@ require_once('auth.php');
                     }
                 });
             }
+
+
+            function Direktverkauf() {
+                //$("#KuecheHistory").html("loading ...");
+                $('#Direktverkauf').load('direktverkauf.php', function () {
+                    $('#Direktverkauf').trigger('create');
+                });
+                $.mobile.changePage('#Direktverkauf');
+            }
+
 
             function KuecheHistory() {
                 //$("#KuecheHistory").html("loading ...");
