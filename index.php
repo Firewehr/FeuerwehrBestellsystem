@@ -136,6 +136,24 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 });
             }
 
+            function updateKapazitaet(position, kapazitaet) {
+
+                kapazitaet = prompt("Neue Kapazitaet:", kapazitaet);
+                console.log("Update Kapazität");
+                if (kapazitaet !== null) {
+                    $.ajax({
+                        url: 'update_kapazitaet.php?rowid=' + position + '&kapazitaet=' + kapazitaet,
+                        type: "get",
+                        complete: function (data, responseText) {
+                            AdminAnsicht();
+                        },
+                        success: function (data) {
+
+                        },
+                        dataType: "json"
+                    });
+                }
+            }
 
 
             function updateSpeisekarte(tischnummer) {

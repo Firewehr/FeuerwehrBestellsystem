@@ -59,7 +59,7 @@ require_once('auth.php');
             <?php
             try {
                 include_once ("include/db.php");
-                echo '<table data-role="table" data-mode="columntoggle" class="ui-responsive" id="myUsers">'
+                echo '<table data-role="table" class="ui-responsive" id="myUsers">'
                 . '<thead>'
                 . '<tr>'
                 . '<th>Benutzer</th>'
@@ -124,6 +124,7 @@ require_once('auth.php');
                 . '<th data-priority="1">Position</th>'
                 . '<th data-priority="1">Betrag</th>'
                 . '<th data-priority="3">Bestellt</th>'
+                . '<th data-priority="3">Kapazität</th>'
                 . '<th data-priority="2">Rest</th>'
                 . '<th data-priority="1">&nbsp;</th></tr>'
                 . '</thead>';
@@ -163,6 +164,8 @@ require_once('auth.php');
                     echo utf8_encode($row4['Betrag']);
                     echo '</td><td>';
                     echo $anzahlBestellt . ' von ' . $maxBestellbar;
+                    echo '</td><td>';
+                    echo '<a onclick="updateKapazitaet(' . $row4['rowid'] . ',' . $maxBestellbar . ')" href="#" class="ui-btn ui-icon-edit ui-btn-icon-left">' . $row4['maxBestellbar'] . '</a>';
                     echo '</td><td>';
                     echo $rest . ' ' . $text;
                     echo '</td><td>';
