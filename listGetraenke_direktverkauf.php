@@ -35,7 +35,12 @@ while ($rowww = mysqli_fetch_assoc($result)) {
         }
         echo '<button class="ui-btn ui-corner-all" onclick="saveBestellung(' . $rowww['rowid'] . ',0,' . $Tischnummer . ',1);"';
 
-        $sql4 = "SELECT COUNT(*) as cnt FROM bestellungen WHERE tischnummer=" . $Tischnummer . " AND timestampBezahlung='0000-00-00 00:00:00' AND `kueche`=1 AND `delete`=0 AND position=" . $rowww['rowid'];
+        $sql4 = "SELECT COUNT(*) as cnt FROM bestellungen"
+                . " WHERE tischnummer=" . $Tischnummer
+                . " AND kellner='" . htmlspecialchars($_SESSION['user']['username']) . "'" 
+
+                . " AND timestampBezahlung='0000-00-00 00:00:00'"
+                . " AND `kueche`=1 AND `delete`=0 AND position=" . $rowww['rowid'];
         $cnt = "";
         $result4 = mysqli_query($conn, $sql4);
         while ($row4 = mysqli_fetch_assoc($result4)) {

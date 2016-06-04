@@ -11,6 +11,7 @@ include('zahlen_direktverkauf.php');
 
 echo '<div id="Speisen">';
 
+
 $sql1 = "SELECT * FROM positionen WHERE type=1 ORDER BY reihenfolge";
 $result1 = mysqli_query($conn, $sql1);
 $fontColour = "#000000";
@@ -33,7 +34,14 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         echo '<button class="ui-btn ui-corner-all big" onclick="saveBestellung(' . $rowww['rowid'] . ',1,' . $Tischnummer . ',1);"';
 
 
-        $sql4 = "SELECT COUNT(*) as cnt FROM bestellungen WHERE tischnummer=" . $Tischnummer . " AND timestampBezahlung='0000-00-00 00:00:00' AND `kueche`=1 AND `delete`=0 AND position=" . $rowww['rowid'];
+        $sql4 = "SELECT COUNT(*) as cnt FROM bestellungen"
+                . " WHERE tischnummer=" . $Tischnummer
+                . " AND kellner='" . htmlspecialchars($_SESSION['user']['username']) . "'" 
+                . " AND timestampBezahlung='0000-00-00 00:00:00' "
+                . "AND `kueche`=1 "
+                . "AND `delete`=0 "
+                . "AND position=" . $rowww['rowid'];
+        echo "sql4" . $sql4;
         $result4 = mysqli_query($conn, $sql4);
         $text = "";
         $cnt = "";
@@ -51,7 +59,10 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         }
 
 
-        $sql5 = "SELECT COUNT(*) as cnt FROM `bestellungen` WHERE `delete`=0 AND position=" . $rowww['rowid'];
+        $sql5 = "SELECT COUNT(*) as cnt FROM `bestellungen`"
+                . "WHERE `delete`=0 "
+                . " AND kellner='" . htmlspecialchars($_SESSION['user']['username']) . "'" 
+                . " AND position=" . $rowww['rowid'];
 
         $result5 = mysqli_query($conn, $sql5);
 
@@ -84,8 +95,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         echo $e->getMessage();
     }
 }
-?>
-<?php
+
 
 echo '</div>';
 
