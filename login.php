@@ -2,7 +2,7 @@
 include_once 'include/db.php';
 
 if (isset($_SESSION['login'])) {
-    header('Location: http://' . $_SERVER['HTTP_HOST'] . '/posNeu/index.php');
+    header('Location: index.php');
 } else {
     if (!empty($_POST)) {
         if (
@@ -31,7 +31,7 @@ if (isset($_SESSION['login'])) {
                         )
                     );
                     $message['success'] = 'Anmeldung erfolgreich, <a href="index.php">weiter zum Inhalt.';
-                    header('Location: http://' . $_SERVER['HTTP_HOST'] . '/posNeu/index.php');
+                    header('Location: index.php');
                 } else {
                     $message['error'] = 'Das Kennwort ist nicht korrekt.';
                 }

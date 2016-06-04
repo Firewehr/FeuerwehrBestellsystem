@@ -5,7 +5,8 @@ session_start();
 session_regenerate_id();
 
 if (empty($_SESSION['login'])) {
-    header('Location: http://' . $_SERVER['HTTP_HOST'] . '/posNeu/login.php');
+    //header('Location: http://' . $_SERVER['HTTP_HOST'] . '/posNeu/login.php');
+    header('Location: login.php');
     exit;
 } else {
     $login_status = '
