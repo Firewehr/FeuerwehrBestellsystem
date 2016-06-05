@@ -1,19 +1,20 @@
 <?php
 require_once('auth.php');
-$rowid = intval($_GET['rowid']);
 
 require_once 'include/db.php';
 
+$myArray = $_REQUEST['listePositionen'];
 
 
-$sql = "UPDATE `bestellungen` SET `zeitKueche`=current_timestamp, `kueche`= '1' WHERE `bestellungen`.`rowid`=" . $rowid;
+foreach ($myArray as $row) {
 
+    $sql = "UPDATE `bestellungen` SET `zeitKueche`=current_timestamp, `kueche`= '1' WHERE rowid=" . intval($row);
 
-//echo $sql;
-if (mysqli_query($conn, $sql)) {
-    echo "Record updated successfully";
-} else {
-    echo "Error updating record: " . mysqli_error($conn);
+    if (mysqli_query($conn, $sql)) {
+        echo "Record updated successfully";
+    } else {
+        echo "Error updating record: " . mysqli_error($conn);
+    }
 }
 
 mysqli_close($conn);

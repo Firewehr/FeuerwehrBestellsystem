@@ -84,6 +84,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             var PlaySound = false;
             var PlaySoundKueche = false;
             var PlaySoundSchank = false;
+            var arrayZahlungGetrennt = [];
 
             $(document).on({
                 ajaxStart: function () {
@@ -113,7 +114,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                             //return false;
                         } else {
                             //return true;
-                            kuecheGesamtFertig(bestellungSQL); //sql wird übergeben
+                            kuecheGesamtFertig(bestellungListe); //sql wird übergeben
                         }
                     }
 
@@ -123,7 +124,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                             //return false;
                         } else {
                             //return true;
-                            schankGesamtFertig(bestellungSQL); //sql wird übergeben
+                            schankGesamtFertig(bestellungListe); //sql wird übergeben
                             //alert(bestellungTischnr + ":  Bestellung Kueche abgeschlossen!");
                         }
                     }
@@ -467,10 +468,11 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 });
             }
 
-            function BestellungBezahlt(sql, direktverkauf) {
+            function BestellungBezahlt(arrayListe, direktverkauf) {
                 $.ajax({
-                    type: "GET",
-                    url: "BestellungBezahlt.php?rowid=" + sql,
+                    type: "POST",
+                    url: "BestellungBezahlt.php",
+                    data: {listePositionen: arrayListe},
                     cache: false,
                     //data: formData,
                     complete: function (data) {
@@ -484,10 +486,11 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 });
             }
 
-            function schankGesamtFertig(sql) {
+            function schankGesamtFertig(arrayListe) {
                 $.ajax({
-                    type: "GET",
-                    url: "kueche_fertig_tisch.php?rowid=" + sql,
+                    type: "POST",
+                    url: "kueche_fertig_tisch.php",
+                    data: {listePositionen: arrayListe},
                     cache: false,
                     complete: function (data) {
                         SchankAnsichtRefresh();
@@ -496,10 +499,11 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 });
             }
 
-            function kuecheGesamtFertig(sql) {
+            function kuecheGesamtFertig(arrayListe) {
                 $.ajax({
-                    type: "GET",
-                    url: "kueche_fertig_tisch.php?rowid=" + sql,
+                    type: "POST",
+                    url: "kueche_fertig_tisch.php",
+                    data: {listePositionen: arrayListe},
                     cache: false,
                     //data: formData,
                     complete: function (data) {
@@ -628,10 +632,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         </div>
 
         <div data-role="page" id="adminPage">
-            <script>
-
-
-            </script>
+            <a href="#indexPage">zurueck</a>
         </div>
 
 
@@ -641,6 +642,8 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
 
 
         <div data-role="page" id="Direktverkauf">
+            <a href="#indexPage">zurueck</a>
+
         </div>
 
         <div data-role="page" id="myOrdersPage">
@@ -660,6 +663,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         </div>
 
         <div data-role="page" id="Schankansicht">
+            <a href="#indexPage">zurueck</a>
 
         </div>
 

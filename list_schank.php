@@ -1,6 +1,7 @@
 <?php
 require_once('auth.php');
 error_reporting(E_ALL);
+//TODO: https://wiki.selfhtml.org/wiki/JavaScript/Objekte/Array
 ?>
 
 <div data-role="header">
@@ -22,7 +23,7 @@ error_reporting(E_ALL);
                     include_once ("include/db.php");
                     $counter = 0;
                     $sql = "SELECT `positionen`.`type`,tische.tischname, bestellungen.tischnummer, FLOOR( UNIX_TIMESTAMP(  bestellungen.zeitstempel ) /300 ) AS t, COUNT( * ), kellner FROM bestellungen, positionen,tische WHERE tische.tischnummer=bestellungen.tischnummer AND bestellungen.position=positionen.rowid AND `delete`=0 AND `kueche`=0 AND `type`=2 GROUP BY t, bestellungen.tischnummer ORDER BY bestellungen.zeitstempel, t LIMIT 50";
-                    
+
                     $result = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($result)) {
                         $Bestellungen = "";
@@ -59,17 +60,21 @@ error_reporting(E_ALL);
                         //Abfrage ohne Group um die einzelnen ID's zu bekommen
                         $query23 = "SELECT `bestellungen`.`zeitKueche`, `bestellungen`.`position`, `bestellungen`.`tischnummer`, `bestellungen`.`zeitstempel`, `positionen`.`rowid`, `positionen`.`Positionsname`, `positionen`.`type`, `bestellungen`.`kueche`, `bestellungen`.`delete`, `bestellungen`.`rowid`, FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  FROM bestellungen, positionen WHERE bestellungen.position=positionen.rowid AND `type`=2 AND  bestellungen.zeitKueche='0000-00-00 00:00:00' AND bestellungen.ausgeliefert=0 AND positionen.type=2 AND bestellungen.delete=0 AND bestellungen.tischnummer=" . $tischnummerselect . " AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " ORDER BY positionen.Positionsname ASC";
                         $result23 = mysqli_query($conn, $query23);
+                        $arrayListe = '[';
 
                         while ($row23 = mysqli_fetch_assoc($result23)) { //Ausgabe der offenen Bestellungen eines Tisches
                             $Bestellungen = $Bestellungen . $row23['rowid'] . " OR rowid=";
+                            $arrayListe = $arrayListe . $row23['rowid'] . ',';
                             $timestampBestellung = $row23['zeitstempel'];
                         }
+                        $arrayListe = substr($arrayListe, 0, -1);
+                        $arrayListe = $arrayListe . ']';
 
                         echo '</div>';
                         echo '<div class="ui-block-b">';
                         //Bereits hergerichtete Positionen
                         $query = "SELECT bestellungen.kueche, COUNT( * ) AS anzahl, `bestellungen`.`zeitKueche`, bestellungen.Zusatzinfo, `bestellungen`.`position`, `bestellungen`.`tischnummer`, `bestellungen`.`zeitstempel`, `positionen`.`rowid`, `positionen`.`Positionsname`, `positionen`.`type`, `bestellungen`.`kueche`, `bestellungen`.`delete`, `bestellungen`.`rowid`, FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  FROM bestellungen, positionen WHERE bestellungen.position=positionen.rowid AND bestellungen.ausgeliefert=0 AND positionen.type=2 AND bestellungen.delete=0 AND bestellungen.zeitKueche!='0000-00-00 00:00:00' AND bestellungen.tischnummer=" . $tischnummerselect . " AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " GROUP BY Zusatzinfo, bestellungen.position ORDER BY `bestellungen`.`zeitKueche` DESC";
-                        
+
                         $result2 = mysqli_query($conn, $query);
 
                         while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der bereits gerichteten Bestellungen
@@ -90,13 +95,16 @@ error_reporting(E_ALL);
                         $Bestellungen = substr($Bestellungen, 0, -10);
 
                         if ($counter == 0) {
-                            echo '<script type="text/javascript">bestellungSQL="' . $Bestellungen . '"; bestellungTischnr="' . $tischname . '";</script>';
+                            echo '<script type="text/javascript">'
+                            . 'bestellungListe=' . $arrayListe . ';'
+                            . 'bestellungTischnr="' . $tischname . '";</script>';
                         } else {
                             //echo '<script type="text/javascript"></script>';
                         }
 
                         $counter++;
-                        echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" onclick="schankGesamtFertig(\'' . $Bestellungen . '\');"/>';
+                        echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" '
+                        . 'onclick="schankGesamtFertig(' . $arrayListe . ');"/>';
                         echo '<br><h1>&nbsp;</h1>';
                         echo '</div>';
 
@@ -111,7 +119,12 @@ error_reporting(E_ALL);
 
                 try {
                     include_once ("include/db.php");
-                    $sql5 = "SELECT COUNT( * ) AS anzahl FROM bestellungen, positionen WHERE bestellungen.position = positionen.rowid AND positionen.type=2 AND bestellungen.delete=0 AND `kueche`=0";
+                    $sql5 = "SELECT COUNT( * ) AS anzahl "
+                            . "FROM bestellungen, positionen "
+                            . "WHERE bestellungen.position = positionen.rowid "
+                            . "AND positionen.type=2 "
+                            . "AND bestellungen.delete=0 "
+                            . "AND `kueche`=0";
                     $query5 = mysqli_query($conn, $sql5);
                     while ($row = mysqli_fetch_assoc($query5)) {
                         if ($row['anzahl'] <= 30) {
@@ -135,11 +148,21 @@ error_reporting(E_ALL);
                 ?>
             </div>
         </div></div><div class="ui-block-b"><div class="ui-bar ui-bar-a" style="background-color:<?php echo $bgcolor; ?>"><?php
-        echo '<p style="font-size:30px;color:' . $colorAnzahl . '" align="center">' . $wartendeBestellungen . ' Bestellungen wartend</p>';
+        echo '<p style="font-size:30px;color:' . $colorAnzahl . '" align="center">' . $wartendeBestellungen . ' Positionen wartend</p>';
         echo '<script type="text/javascript">AnzahlBestellungenAktuell="' . $wartendeBestellungen . '"</script>';
         try {
             include_once ("include/db.php");
-            $sql6 = "SELECT bestellungen.position, positionen.rowid, positionen.positionsname, COUNT( * ) AS anzahl FROM positionen, bestellungen WHERE bestellungen.position = positionen.rowid AND bestellungen.kueche=0 AND positionen.type=2 AND bestellungen.delete=0 GROUP BY bestellungen.position ORDER BY anzahl DESC";
+            $sql6 = "SELECT bestellungen.position,"
+                    . " positionen.rowid,"
+                    . " positionen.positionsname,"
+                    . " COUNT( * ) AS anzahl"
+                    . " FROM positionen, bestellungen"
+                    . " WHERE bestellungen.position = positionen.rowid"
+                    . " AND bestellungen.kueche=0"
+                    . " AND positionen.type=2"
+                    . " AND bestellungen.delete=0"
+                    . " GROUP BY bestellungen.position"
+                    . " ORDER BY anzahl DESC";
             //echo $sql6;
             $query6 = mysqli_query($conn, $sql6);
             while ($row = mysqli_fetch_assoc($query6)) {
@@ -189,7 +212,7 @@ error_reporting(E_ALL);
          //var notification = new Notification("Hi there!");
          }
          });
-             
+         
          }
          */
 

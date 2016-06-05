@@ -31,6 +31,7 @@ $Summe = 0;
 $rowIDsBezahltAlle = "";
 $result = mysqli_query($conn, $sql);
 $count = 0;
+$arrayListe = '[';
 
 while ($row = mysqli_fetch_assoc($result)) {
     $count++;
@@ -44,8 +45,10 @@ while ($row = mysqli_fetch_assoc($result)) {
     $timestamp = strtotime($row['zeitstempel']);
 
     $rowIDsBezahltAlle = $rowIDsBezahltAlle . $row['rowidBestellung'] . ' OR rowid=';
+    $arrayListe = $arrayListe . $row['rowidBestellung'] . ',';
 }
-
+$arrayListe = substr($arrayListe, 0, -1);
+$arrayListe = $arrayListe . ']';
 echo '<h2>Gesamt: ';
 echo money_format('%i', (double) $Summe);
 echo '</h2>';
@@ -53,6 +56,8 @@ echo '</h2>';
 //echo $rowIDsBezahltAlle;
 
 if ($count > 0) {
-    echo '<a style="background-color:rgba(255, 255, 0,0.5)" onclick="BestellungBezahlt(\'' . $rowIDsBezahltAlle . '\',1);" class="ui-btn">Bezahlen</a>';
+    echo '<a style="background-color:rgba(255, 255, 0,0.5)" '
+    . 'onclick="BestellungBezahlt(' . $arrayListe . ',1);" '
+    . 'class="ui-btn">Bezahlen</a>';
 }
     
