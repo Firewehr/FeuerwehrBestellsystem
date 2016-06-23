@@ -114,7 +114,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                             //return false;
                         } else {
                             //return true;
-                            kuecheGesamtFertig(bestellungListe); //sql wird übergeben
+                            kuecheGesamtFertig(bestellungListe);
                         }
                     }
 
@@ -124,7 +124,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                             //return false;
                         } else {
                             //return true;
-                            schankGesamtFertig(bestellungListe); //sql wird übergeben
+                            schankGesamtFertig(bestellungListe);
                             //alert(bestellungTischnr + ":  Bestellung Kueche abgeschlossen!");
                         }
                     }
@@ -268,7 +268,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             }
 
             function saveBestellung(position, tab, tischnummer, fertig) {
-                console.log("saveBestellung");
+                console.log("saveBestellung()");
                 $.mobile.loading('show');
                 dataString = "Tischnummer=" + tischnummer + "&positionsid=" + position + "&Zusatzinfo=" + Beilagen + "&kuechefertig=" + fertig;
                 console.log(dataString);
@@ -456,6 +456,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             }
 
             function kuecheFertig(rowid) {
+                console.log("KuecheFertig()" + rowid)
                 $.ajax({
                     type: "GET",
                     url: "kueche_fertig.php?rowid=" + rowid,
@@ -469,21 +470,30 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             }
 
             function BestellungBezahlt(arrayListe, direktverkauf) {
-                $.ajax({
-                    type: "POST",
-                    url: "BestellungBezahlt.php",
-                    data: {listePositionen: arrayListe},
-                    cache: false,
-                    //data: formData,
-                    complete: function (data) {
-                        if (direktverkauf === 1) {
-                            Direktverkauf();
-                        } else {
-                            TischBezahlen();
-                        }
-                    },
-                    error: onError
-                });
+
+                Check = confirm("Zahlen?");
+                if (Check == false) {
+                    //return false;
+                } else {
+                    //return true;
+                    $.ajax({
+                        type: "POST",
+                        url: "BestellungBezahlt.php",
+                        data: {listePositionen: arrayListe},
+                        cache: false,
+                        //data: formData,
+                        complete: function (data) {
+                            if (direktverkauf === 1) {
+                                Direktverkauf();
+                            } else {
+                                TischBezahlen();
+                            }
+                        },
+                        error: onError
+                    });
+                }
+
+
             }
 
             function schankGesamtFertig(arrayListe) {
