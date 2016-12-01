@@ -470,37 +470,39 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             }
 
             function BestellungBezahlt(arrayListe, direktverkauf) {
-
-                Check = confirm("Zahlen?");
-                if (Check == false) {
-                    //return false;
-                } else {
-                    //return true;
-                    $.ajax({
-                        type: "POST",
-                        url: "BestellungBezahlt.php",
-                        data: {listePositionen: arrayListe},
-                        cache: false,
-                        //data: formData,
-                        complete: function (data) {
-                            if (direktverkauf === 1) {
-                                Direktverkauf();
-                            } else {
-                                TischBezahlen();
-                            }
-                        },
-                        error: onError
-                    });
-                }
+                $.ajax({
+                    type: "POST",
+                    url: "BestellungBezahlt.php",
+                    data: {listePositionen: arrayListe},
+                    cache: false,
+                    //data: formData,
+                    complete: function (data) {
+                        if (direktverkauf === 1) {
+                            Direktverkauf();
+                        } else {
+                            TischBezahlen();
+                        }
+                    },
+                    error: onError
+                });
+                /*
+                 * REMOVED FOR IOS FRANZ PROBLEM
+                 Check = confirm("Zahlen?");
+                 if (Check == false) {
+                 //return false;
+                 } else {
+                 //return true;
+                 
+                 }*/
 
 
             }
 
-            function schankGesamtFertig(arrayListe) {
+            function schankGesamtFertig(arrayListe, tischnummer) {
                 $.ajax({
                     type: "POST",
                     url: "kueche_fertig_tisch.php",
-                    data: {listePositionen: arrayListe},
+                    data: {listePositionen: arrayListe, tischnummer: tischnummer},
                     cache: false,
                     complete: function (data) {
                         SchankAnsichtRefresh();
@@ -509,11 +511,11 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 });
             }
 
-            function kuecheGesamtFertig(arrayListe) {
+            function kuecheGesamtFertig(arrayListe, tischnummer) {
                 $.ajax({
                     type: "POST",
                     url: "kueche_fertig_tisch.php",
-                    data: {listePositionen: arrayListe},
+                    data: {listePositionen: arrayListe, tischnummer: tischnummer},
                     cache: false,
                     //data: formData,
                     complete: function (data) {
@@ -541,20 +543,21 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             }
 
             function bestellungLoeschen(rowid, tischnummer) {
-
-                var r = confirm("Bestellung wirklich stornieren?");
-                if (r == true) {
-                    $.ajax({
-                        type: "GET",
-                        url: "bestellung_loeschen.php?rowid=" + rowid,
-                        cache: false,
-                        complete: function (data) {
-                            Summe = 0;
-                            TischAnsichtHistory();
-                        },
-                        error: onError
-                    });
-                }
+                $.ajax({
+                    type: "GET",
+                    url: "bestellung_loeschen.php?rowid=" + rowid,
+                    cache: false,
+                    complete: function (data) {
+                        Summe = 0;
+                        TischAnsichtHistory();
+                    },
+                    error: onError
+                });
+                /* DEBUG REMOVED FOR IOS FRANZ PROBLEM
+                 var r = confirm("Bestellung wirklich stornieren?");
+                 if (r == true) {
+                 
+                 }*/
             }
 
             function onSuccess()
@@ -841,6 +844,19 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 $.mobile.changePage('#Direktverkauf');
             }
 
+            function printSinglePositionen(arrayListe, tischnummer) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "print_single_positionen.php",
+                    data: {listePositionen: arrayListe, tischnummer: tischnummer},
+                    cache: false,
+                    //data: formData,
+                    complete: function (data) {
+                    },
+                    error: onError
+                });
+            }
 
             function KuecheHistory() {
                 //$("#KuecheHistory").html("loading ...");
