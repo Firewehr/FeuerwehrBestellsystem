@@ -124,7 +124,7 @@ require_once('auth.php');
                 . '<th data-priority="1">Position</th>'
                 . '<th data-priority="1">Betrag</th>'
                 . '<th data-priority="3">Bestellt</th>'
-                . '<th data-priority="3">Kapazität</th>'
+                . '<th data-priority="1">Kapazität</th>'
                 . '<th data-priority="2">Rest</th>'
                 . '<th data-priority="1">&nbsp;</th></tr>'
                 . '</thead>';
