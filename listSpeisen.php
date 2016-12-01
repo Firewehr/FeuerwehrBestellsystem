@@ -28,10 +28,14 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             $i = 0;
         }
 
-        echo '<button class="ui-btn ui-corner-all big" onclick="saveBestellung(' . $rowww['rowid'] . ',1,' . $Tischnummer . ');"';
+        echo '<button class="ui-btn ui-corner-all big" onclick="saveBestellung(' . $rowww['rowid'] . ',1,' . $Tischnummer . ',0);"';
 
 
-        $sql4 = "SELECT COUNT(*) as cnt FROM bestellungen WHERE tischnummer=" . $Tischnummer . " AND kueche=0 AND `delete`=0 AND position=" . $rowww['rowid'];
+        $sql4 = "SELECT COUNT(*) as cnt FROM bestellungen "
+                . "WHERE tischnummer=" . $Tischnummer . " "
+                . "AND kueche=0 "
+                . "AND `delete`=0 "
+                . "AND position=" . $rowww['rowid'];
         $result4 = mysqli_query($conn, $sql4);
         $text = "";
         $cnt = "";

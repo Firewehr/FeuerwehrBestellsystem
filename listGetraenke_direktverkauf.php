@@ -12,9 +12,6 @@ echo '<div id="Getraenke">';
 include_once ("include/db.php");
 error_reporting(E_ALL);
 
-
-
-
 echo '<div class="ui-grid-a">';
 $sql = "SELECT * FROM positionen WHERE type=2 ORDER BY reihenfolge";
 $result = mysqli_query($conn, $sql);
