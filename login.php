@@ -47,9 +47,6 @@ if (isset($_SESSION['login'])) {
 ?>
 <!DOCTYPE html>
 
-
-
-<!DOCTYPE html> 
 <html>
     <head>
         <title>Page Title</title>
