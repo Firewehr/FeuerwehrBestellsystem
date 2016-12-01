@@ -12,7 +12,7 @@ require_once('auth.php');
 <div id="BestellungZahlen">
     <script>
         arrayZahlungGetrennt = [];
-        arrayZahlung=[];
+        arrayZahlung = [];
     </script>
     <?php
     $Tischnummer = intval($_GET['tischnummer']);
@@ -45,7 +45,9 @@ require_once('auth.php');
         $result = mysqli_query($conn, $sql);
         $count = 0;
         $arrayListe = '[';
+        $i = 0;
         while ($row = mysqli_fetch_assoc($result)) {
+            $i++;
             $count++;
             $Colour = "white";
 
@@ -83,7 +85,10 @@ require_once('auth.php');
             echo '<td wdith="20%" align="right">' . money_format('%i', (float) $row['betrag']) . '</td>';
             echo '</tr>';
         }
-        $arrayListe = substr($arrayListe, 0, -1);
+        if ($i > 0) {
+            $arrayListe = substr($arrayListe, 0, -1);
+
+        }
         $arrayListe = $arrayListe . ']';
         echo '<tr>';
 
@@ -104,12 +109,12 @@ require_once('auth.php');
             . '$(\'#btnBezahlenGesamt\').hide();'
             . 'BestellungBezahlt(arrayZahlungGetrennt,0);" '
             . 'class="ui-btn">Bezahlen</a>';
-            
+
             echo '<a id="btnBezahlenGesamt" style="background-color:rgba(255, 255, 0,0.5)" '
             . 'onclick="'
             . '$(\'#btnBezahlenGesamt\').hide();'
             . 'BestellungBezahlt(arrayZahlung,0);" '
-            . 'class="ui-btn">Bezahlen Gesamt</a>';            
+            . 'class="ui-btn">Bezahlen Gesamt</a>';
         }
 
         echo '</td></tr>';
@@ -119,12 +124,12 @@ require_once('auth.php');
     echo '</table>';
     echo '<script>'
     . 'rowIDsBezahltAlle="' . $rowIDsBezahltAlle . '";'
-    . 'arrayZahlung=' . $arrayListe . '</script>';
+    . 'arrayZahlung=' . $arrayListe . ';</script>';
     echo '</div>';
     ?>
     <script>
-        
-        
+
+
         $('#btnBezahlenGesamtEinzeln').hide();
         $("#BestellungZahlen").on("swiperight", function () {
             console.log("swiperight");

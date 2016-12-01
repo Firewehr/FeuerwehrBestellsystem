@@ -126,9 +126,12 @@ error_reporting(E_ALL);
                         $arrayListe = substr($arrayListe, 0, -1);
                         $arrayListe = $arrayListe . ']';
 
+
                         echo '</div>';
                         echo '<div class="ui-block-b">';
-                        //Bereits hergerichtete Positionen
+
+
+                        //Bereits gerichtete, aber noch nicht gedruckte Positionen
                         $query = "SELECT bestellungen.kueche, "
                                 . "COUNT( * ) AS anzahl, "
                                 . "`bestellungen`.`zeitKueche`, "
@@ -136,6 +139,60 @@ error_reporting(E_ALL);
                                 . "`bestellungen`.`position`, "
                                 . "`bestellungen`.`tischnummer`, "
                                 . "`bestellungen`.`zeitstempel`, "
+                                . "`bestellungen`.`print`, "
+                                . "`positionen`.`rowid`, "
+                                . "`positionen`.`Positionsname`, "
+                                . "`positionen`.`type`, "
+                                . "`bestellungen`.`kueche`, "
+                                . "`bestellungen`.`delete`, "
+                                . "`bestellungen`.`rowid`, "
+                                . "FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  "
+                                . "FROM bestellungen, positionen "
+                                . "WHERE bestellungen.position=positionen.rowid "
+                                . "AND bestellungen.ausgeliefert=0 "
+                                . "AND positionen.type=1 "
+                                . "AND bestellungen.print=2 "
+                                . "AND bestellungen.delete=0 "
+                                . "AND bestellungen.zeitKueche!='0000-00-00 00:00:00' "
+                                . "AND bestellungen.tischnummer=" . $tischnummerselect . " "
+                                . "AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " "
+                                . "GROUP BY bestellungen.Zusatzinfo, "
+                                . "bestellungen.position "
+                                . "ORDER BY `bestellungen`.`zeitKueche` DESC";
+
+                        $result2 = mysqli_query($conn, $query);
+
+                        $printListe = '[';
+
+
+                        while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der bereits gerichteten Bestellungen
+                            if ($row2['kueche'] == 1) {
+                                //bestellung wartend
+
+                                echo '<input class="durchgestrichen" style="text-decoration: line-through;text-decoration: overline line-through; background-color:#009933; color:#f00;" type="button" value="' . ' (' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']) . ' (' . $row2['Zusatzinfo'] . ')"/>';
+                            } else {
+                                //fertig
+
+                                echo '<input '
+                                . 'style="text-decoration: line-through; text-decoration: overline line-through; background-color:#009933; color:#f00;" '
+                                . 'type="button" '
+                                . 'value="' . ' (' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']) . '"/>';
+                            }
+
+
+                            $timestamp = strtotime($row2['zeitstempel']);
+                        }
+
+                        //Für Print Befehl  
+                        //Bereits hergerichtete Positionen
+                        $query = "SELECT bestellungen.kueche, "
+                                . ""
+                                . "`bestellungen`.`zeitKueche`, "
+                                . "bestellungen.Zusatzinfo, "
+                                . "`bestellungen`.`position`, "
+                                . "`bestellungen`.`tischnummer`, "
+                                . "`bestellungen`.`zeitstempel`, "
+                                . "`bestellungen`.`print`, "
                                 . "`positionen`.`rowid`, "
                                 . "`positionen`.`Positionsname`, "
                                 . "`positionen`.`type`, "
@@ -151,27 +208,33 @@ error_reporting(E_ALL);
                                 . "AND bestellungen.zeitKueche!='0000-00-00 00:00:00' "
                                 . "AND bestellungen.tischnummer=" . $tischnummerselect . " "
                                 . "AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " "
-                                . "GROUP BY bestellungen.Zusatzinfo, "
-                                . "bestellungen.position "
+                                . ""
                                 . "ORDER BY `bestellungen`.`zeitKueche` DESC";
 
-                        $result2 = mysqli_query($conn, $query);
+                        $result6 = mysqli_query($conn, $query);
 
-                        while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der bereits gerichteten Bestellungen
+                        $arrayListe = substr($arrayListe, 0, -1);
+                        $arrayListe = $arrayListe . ']';
+
+                        while ($row2 = mysqli_fetch_assoc($result6)) { //Ausgabe der bereits gerichteten Bestellungen
                             if ($row2['kueche'] == 1) {
                                 //bestellung wartend
-                                echo '<input class="durchgestrichen" style="text-decoration: line-through;text-decoration: overline line-through; background-color:#009933; color:#f00;" type="button" value="' . ' (' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']) . ' (' . $row2['Zusatzinfo'] . ')"/>';
+                                //echo $row2['print'];
+                                if ($row2['print'] != '1') {
+                                    $printListe = $printListe . $row2['rowid'] . ',';
+                                }
                             } else {
                                 //fertig
-
-                                echo '<input '
-                                . 'style="text-decoration: line-through; text-decoration: overline line-through; background-color:#009933; color:#f00;" '
-                                . 'type="button" '
-                                . 'value="' . ' (' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']) . '"/>';
                             }
+
 
                             $timestamp = strtotime($row2['zeitstempel']);
                         }
+
+
+
+                        $printListe = substr($printListe, 0, -1);
+                        $printListe = $printListe . ']';
 
                         echo '</div>';
 
@@ -195,7 +258,9 @@ error_reporting(E_ALL);
 
                         echo '<div class="ui-block-b">';
 
-                        echo '<p>(wartend:' . gmdate("i:s", (time() - $timestamp)) . ')</p>';
+                        echo '<input style="background-color:#cc6600; color:#f99;" type="button" value="Drucken" '
+                        . 'onclick="printSinglePositionen(' . $printListe . ',' . $tischnummerselect . ');"/>'
+                        . '<p>(wartend:' . gmdate("i:s", (time() - $timestamp)) . ')</p>';
                         echo '</div>';
                     }
                 } catch (Exception $e) {
