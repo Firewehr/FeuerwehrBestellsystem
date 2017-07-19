@@ -1,12 +1,11 @@
 <?php
-
+include('auth.php');
 $message = array();
 include_once('include/db.php');
 error_reporting(E_ALL);
 
 
-
-if (!empty($_POST)) {
+if (!empty($_POST) && $_SESSION['admin']==1) {
     if (
             empty($_POST['username']) ||
             empty($_POST['password']) ||
@@ -33,13 +32,14 @@ if (!empty($_POST)) {
             $message['error'] = 'Datenbankverbindung fehlgeschlagen: ' . $mysqli->connect_error;
         }
         $query = sprintf(
-                "INSERT INTO users (username, password)
-				SELECT * FROM (SELECT '%s', '%s') as new_user
+                "INSERT INTO users (username, password, admin)
+				SELECT * FROM (SELECT '%s', '%s', '%s') as new_user
 				WHERE NOT EXISTS (
 					SELECT username FROM users WHERE username = '%s'
-				) LIMIT 1;", $mysqli->real_escape_string($_POST['username']), $mysqli->real_escape_string($_POST['password']), $mysqli->real_escape_string($_POST['username'])
+				) LIMIT 1;", $mysqli->real_escape_string($_POST['username']), $mysqli->real_escape_string($_POST['password']),$mysqli->real_escape_string($_POST['admin']) ,$mysqli->real_escape_string($_POST['username'])
         );
         $mysqli->query($query);
+        //echo $query;
         if ($mysqli->affected_rows == 1) {
             $message['success'] = 'Neuer Benutzer (' . htmlspecialchars($_POST['username']) . ') wurde angelegt, <a href="login.php">weiter zur Anmeldung</a>.';
             echo 'Neuer Benutzer (' . htmlspecialchars($_POST['username']) . ') wurde angelegt!';

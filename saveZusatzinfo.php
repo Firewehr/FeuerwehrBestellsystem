@@ -3,7 +3,7 @@
 require_once('auth.php');
 
 $rowid = intval($_POST['rowid']);
-$Zusatzinfo = utf8_decode(mysql_escape_string($_POST['Zusatzinfo']));
+$Zusatzinfo = utf8_decode($_POST['Zusatzinfo']);
 
 if (!empty($Zusatzinfo)) {
 
