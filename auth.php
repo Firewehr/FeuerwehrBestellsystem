@@ -4,6 +4,8 @@ error_reporting(E_ALL);
 session_start();
 session_regenerate_id();
 
+//echo $_SERVER['HTTP_REFERER'];
+
 if (empty($_SESSION['login'])) {
     //header('Location: http://' . $_SERVER['HTTP_HOST'] . '/posNeu/login.php');
     header('Location: login.php');

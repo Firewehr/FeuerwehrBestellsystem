@@ -1,5 +1,10 @@
 <?php
 require_once('auth.php');
+//echo $_SESSION['admin'];
+
+if ($_SESSION['admin'] != 1) {
+    header('Location: index.php');
+}
 ?>
 <div data-role="header">
     <h1>Fr&uuml;hschoppen Bestellsystem</h1>
@@ -10,13 +15,14 @@ require_once('auth.php');
     <ul data-role="listview" data-inset="true">
 
         <div id="neuerTisch" data-role="collapsible" data-collapsed="true">
+            <a href="manage/" target="_blank">Tische verwalten (extern)</a>
             <h3>Tisch hinzufügen:</h3>
 
             <form>
                 <p>Tischname:<input id="neuerTischName" type="text" value=""></p>
                 <p>Farbe:<input id="neueTischFarbe" type="text" value=""></p>
-                <p>X:<input id="neueTischX" type="number" value=""></p>
-                <p>Y:<input id="neueTischY" type="number" value=""></p>
+                <p>X (Spalte):<input id="neueTischX" type="number" value=""></p>
+                <p>Y (Zeile):<input id="neueTischY" type="number" value=""></p>
                 <input type="button" onclick="saveNeuerTisch();" value="Speichern">
             </form>
 
@@ -46,6 +52,11 @@ require_once('auth.php');
                     <fieldset>
 
                         <div><label for="username">Benutzername</label> <input type="text" name="f[username]" id="username"<?php echo isset($_POST['f']['username']) ? ' value="' . htmlspecialchars($_POST['f']['username']) . '"' : '' ?> /></div>
+                        <div><label for="adminyesno">Benutzertyp:</label>
+                            <select type="select" name="f[adminyesno]" id="adminyesno">
+                                <option value="0">normaler Benutzer</option>
+                                <option value="1">Administrator</option>
+                            </select></div>
                         <div><label for="password">Kennwort</label> <input type="password" name="f[password]" id="password" /></div>
                         <div><label for="password_again">Kennwort wiederholen</label> <input type="password" name="f[password_again]" id="password_again" /></div>
                     </fieldset>
@@ -63,6 +74,7 @@ require_once('auth.php');
                 . '<thead>'
                 . '<tr>'
                 . '<th>Benutzer</th>'
+                . '<th>Benutzerrechte</th>'
                 . '<th>Erstellungsdatum</th>'
                 . '</tr>'
                 . '</thead>';
@@ -73,7 +85,15 @@ require_once('auth.php');
 
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo '<tr>';
-                    echo '<td>' . $row['username'] . '</td><td>' . $row['timestamp'] . '</td';
+                    echo '<td>' . $row['username'] . '</td>';
+                    echo '<td>';
+                    if ($row['admin'] == 1) {
+                        echo 'Administrator';
+                    } else {
+                        echo '&nbsp';
+                    }
+                    echo '</td>';
+                    echo '<td>' . $row['timestamp'] . '</td';
                     echo '</tr>';
                 }
 
@@ -89,19 +109,20 @@ require_once('auth.php');
 
         <div id="Speisekarte" data-role="collapsible" data-collapsed="true">
             <h3>Speisekarte</h3>
+            <a href="manage/" target="_blank">Speisekarte verwalten (extern)</a>
 
             <div id="Positionanlegen" data-role="collapsible" data-collapsed="true">
                 <h3>Position anlegen</h3>
                 <form>
-                    <div><label for="Positionsname">Positionsname</label> <input type="text" name="f[Positionsname]" id="Positionsname"/></div>
+                    <div><label for="Positionsname">Positionsname</label> <input type="text" name="f[Positionsname]" id="Positionsname" required/></div>
                     <div><label for="produktkategorie">Produktkategorie</label>
                         <select name="f[produktkategorie]" id="produktkategorie">
                             <option value="1">Speise</option>
                             <option value="2">Getränk</option>
                         </select>
                     </div>
-                    <div><label for="Betrag">Preis</label> <input type="text" name="f[Betrag]" id="Betrag" /></div>
-                    <div><label for="Kapazitaet">Kapazität</label> <input value placeholder="Die maximal bestellbare Menge. -1 für unendlich" type="text" name="f[Kapazitaet]" id="Kapazitaet" /></div>
+                    <div><label for="Betrag">Preis</label> <input type="text" name="f[Betrag]" id="Betrag" placeholder="Bitte Punkt statt Komma für Kommazahlen verwenden!" required /></div>
+                    <div><label for="Kapazitaet">Kapazität</label> <input value placeholder="Die maximal bestellbare Menge. -1 für unendlich" type="number" name="f[Kapazitaet]" id="Kapazitaet" /></div>
 
                     <fieldset>
                         <div>
@@ -306,7 +327,14 @@ require_once('auth.php');
             echo $e->getMessage();
         }
         ?>
+
+
     </ul>
+    <button style="background-color: red" onclick="resetBestellungen();">Bestellungen zurücksetzen</button>
+
+
+
+</div>
 </div>
 
 <div data-role="footer">
