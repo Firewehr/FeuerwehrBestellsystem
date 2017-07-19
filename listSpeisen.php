@@ -73,7 +73,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 $Colour = "orange";
             }
         }
-        $fontColour = "#" . $rowww['color'];
+        $fontColour = "" . $rowww['color'];
 
 
 

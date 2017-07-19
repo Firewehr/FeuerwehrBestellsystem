@@ -61,7 +61,7 @@ while ($rowww = mysqli_fetch_assoc($result)) {
             }
         }
 
-        $fontColour = "#" . $rowww['color'];
+        $fontColour = "" . $rowww['color'];
 
 
         echo ' style="white-space: normal; !important; color:' . $fontColour . '; height: 80px;background:' . $Colour . ';">';

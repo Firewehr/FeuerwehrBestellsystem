@@ -17,20 +17,23 @@ if (isset($_SESSION['login'])) {
                 $message['error'] = 'Datenbankverbindung fehlgeschlagen: ' . $mysqli->connect_error;
             }
             $query = sprintf(
-                    "SELECT username, password FROM users WHERE username = '%s'", $mysqli->real_escape_string($_POST['f']['username'])
+                    "SELECT username, password, admin FROM users WHERE username = '%s'", $mysqli->real_escape_string($_POST['f']['username'])
             );
             $result = $mysqli->query($query);
             if ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 if (crypt($_POST['f']['password'], $row['password']) == $row['password']) {
                     session_start();
 
-                    $_SESSION = array(
-                        'login' => true,
-                        'user' => array(
-                            'username' => $row['username']
-                        )
+                    $_SESSION = array();
+                    $_SESSION['login'] = true;
+                    $_SESSION['user'] = array(
+                        'username' => $row['username']
                     );
+                    $_SESSION['admin'] = $row['admin'];
+
                     $message['success'] = 'Anmeldung erfolgreich, <a href="index.php">weiter zum Inhalt.';
+
+
                     header('Location: index.php');
                 } else {
                     $message['error'] = 'Das Kennwort ist nicht korrekt.';

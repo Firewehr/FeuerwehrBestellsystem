@@ -374,7 +374,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             }
 
             function BenutzerNeu() {
-                dataString = "username=" + document.getElementById('username').value + "&password=" + document.getElementById('password').value + "&password_again=" + document.getElementById('password_again').value;
+                dataString = "username=" + document.getElementById('username').value + "&password=" + document.getElementById('password').value + "&password_again=" + document.getElementById('password_again').value + "&admin=" + document.getElementById('adminyesno').value;
                 $.ajax({
                     type: "POST",
                     async: true,
@@ -566,6 +566,31 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 data = $.trim(data);
             }
 
+            function resetBestellungen() {
+
+                if (confirm('Wirklich alle Bestellungen löschen?')) {
+                    if (confirm('Wirklich?')) {
+                        dataString = "cmd=reset";
+                        $.ajax({
+                            url: 'reset.php',
+                            type: "GET",
+                            data: dataString,
+                            complete: function (data, responseText) {
+
+                                alert("Bestellungen zurückgesetzt!");
+                            },
+                            success: function (data) {
+
+                            },
+                            dataType: "json"
+                        });
+                    }
+                } else {
+                    alert("Keine Änderungen!");
+                }
+            }
+
+
             function onError(data, status)
             {
                 alert("Fehler: Der Eintrag konnte nicht gespeichert werden!");
@@ -620,10 +645,14 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     </li>    
                     <li>
                         <a href="#myOrdersPage" id="myOrdersButton" onclick="myOrdersAnsicht();">Meine Bestellungen</a>
-                    </li>            
-                    <li>
-                        <a href="#adminPage" id="AdminButton">Admin</a>
                     </li>
+                    <?php
+                    if ($_SESSION['admin'] == 1) {
+                        echo '<li>
+                        <a href="#adminPage" id="AdminButton">Admin</a>
+                    </li>';
+                    }
+                    ?>
                     <li>
                         <a href="backup_download.php" target="_blank">Sicherung Starten</a>
                     </li>

@@ -16,7 +16,7 @@ $sql = "INSERT `tische` SET "
         . "`x`=$neueTischX,"
         . "`y`=$neueTischY,"
         . "`color`=\"$neueTischFarbe\"";
-//echo $sql;
+echo $sql;
 
 if (!mysqli_query($conn, $sql)) {
     die('Error: ' . utf8_encode(mysqli_error($conn)));

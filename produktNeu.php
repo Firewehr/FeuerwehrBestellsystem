@@ -1,4 +1,5 @@
 <?php
+
 require_once('auth.php');
 include_once ("include/db.php");
 
