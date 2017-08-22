@@ -56,6 +56,7 @@ echo '</div>';
     </div>
 
     <div data-role="tabs" id='TischAnzeigen' title="alert-tab">
+        <input style="background-color: #00ff04" type="button" value="Bestellung abschicken" onclick="bestellungAbschicken(<?php echo $Tischnummer; ?>);"/>
             <div data-role="navbar">
             <ul>
                 <?php
