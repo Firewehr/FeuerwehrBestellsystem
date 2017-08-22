@@ -202,6 +202,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 });
             }
 
+
             $(document).ready(function () {
                 $("#KuecheButton").click(function () {
                     Kuechenansicht();
@@ -227,6 +228,27 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     AdminAnsicht();
                 });
             });
+            
+            function bestellungAbschicken(tischnummer) {
+                console.log("bestellung Abschicken" + tischnummer);
+
+                dataString = "tischnummer=" + tischnummer;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "bestellung_abschicken.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+                        //todo: Gehe zu Tische
+                        TischAnsicht();
+                        $.mobile.changePage( "#listTische", { transition: "slideup", changeHash: false });
+                    },
+                    error: onError
+                });                
+            }            
+            
             function saveNeuerTisch() {
                 neuerTischName = document.getElementById('neuerTischName').value;
                 neueTischFarbe = $('#neueTischFarbe').val();
