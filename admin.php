@@ -236,12 +236,19 @@ if ($_SESSION['admin'] != 1) {
             //echo $row4['rowid'];
             $sql = "SELECT COUNT(*) as cnt, kellnerZahlung,SUM(positionen.Betrag) as summe FROM `bestellungen`,positionen WHERE bestellungen.position=positionen.rowid AND `delete`=0 AND timestampBezahlung!='0000-00-00 00:00:00' GROUP by kellnerZahlung ORDER BY kellnerZahlung";
             //echo $sql;
+            
+            setlocale(LC_MONETARY,"de_DE"); //needed for money_format
+            
             $result = mysqli_query($conn, $sql);
             echo '<table>';
             echo '<tr><th>Kellner</th><th>Anzahl</th><th>Betrag</th></tr>';
+            $summe=0;
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td align="right">' . $row['cnt'] . '</td><td align="right">' . $row['summe'] . ' €</td></tr>';
+                echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td align="left">' . $row['cnt'] . '</td><td align="right">' . money_format("%i", $row['summe']) . '</td></tr>';
+                $summe=$summe+$row['summe'];
             }
+            
+            echo '<tr><td>Summe</td><td>&nbsp;</td><td>' . money_format("%i", $summe) . ' </td></tr>';
             echo '</table>';
             echo '</div>';
 
@@ -270,20 +277,22 @@ if ($_SESSION['admin'] != 1) {
             $result = mysqli_query($conn, $sql);
             echo '<table data-mode="columntoggle"><thead><th>Tisch#</th><th>Umsatz</th></thead><tbody>';
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . $row['tischname'] . '</td><td align="right">' . $row['summe'] . ' €</td></tr>';
+                echo '<tr><td>' . $row['tischname'] . '</td><td align="right">' . money_format("%i", $row['summe']) . '</td></tr>';
             }
             echo '</tbody></table>';
             echo '</div>';
 
 
             echo '<div id="durchschnittliche wartezeit je Position" data-role="collapsible" data-collapsed="true">';
-            echo '<h2>Wartezeit je Position (Durchschnitt)</h2>';
-            $sql = "SELECT positionen.Positionsname, AVG(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS avgzeit, COUNT(*) as anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete` = 0 AND `kueche` = 1 AND zeitKueche != '0000-00-00 00:00:00' GROUP BY bestellungen.position ORDER BY avgzeit DESC";
+            echo '<h2>Wartezeit je Position</h2>';
+            $sql = "SELECT positionen.Positionsname, AVG(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS avgzeit, MAX(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS maxzeit,  COUNT(*) as anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete` = 0 AND `kueche` = 1 AND zeitKueche != '0000-00-00 00:00:00' GROUP BY bestellungen.position ORDER BY avgzeit DESC";
 
             $result = mysqli_query($conn, $sql);
             echo '<table>';
+            
+            echo '<tr><th>Position</th><th>Durchschnitt</th><th>Maximum</th></tr>';
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . utf8_encode($row['Positionsname']) . '</td><td align="right">' . $row['avgzeit'] . ' Minuten</td></tr>';
+                echo '<tr><td>' . utf8_encode($row['Positionsname']) . '</td><td align="left">' . round($row['avgzeit'],2) . '</td><td>' . $row['maxzeit'] . '</td></tr>';
             }
             echo '</table>';
             echo '</div>';
