@@ -24,6 +24,7 @@ error_reporting(E_ALL);
                     $counter = 0;
                     $sql = "SELECT `positionen`.`type`,tische.tischname,"
                             . "bestellungen.tischnummer, "
+                            . "`bestellungen`.`bestellt`, "
                             . "FLOOR( UNIX_TIMESTAMP(  bestellungen.zeitstempel ) /300 ) AS t, "
                             . "COUNT( * ), kellner "
                             . "FROM bestellungen, "
@@ -43,7 +44,12 @@ error_reporting(E_ALL);
                         $t = $row['t'];
 
                         if ($tischnummerselect != $row['tischnummer']) {
-                            echo '<div class="ui-block-a">';
+                            if ($row['bestellt'] == 1) {
+                                echo '<div style="background-color: #0ed615;" class="ui-block-a">';
+                            } else {
+                                echo '<div style="background-color: #ff0000;" class="ui-block-a">';
+                            }
+
                             echo '<h2 style="font-size:30px">Tisch: ' . $row['tischname'] . '</h2>'; //. ' (#' . $row['tischnummer'] . 
                             $tischname = $row['tischname'];
                             echo '</div>';
@@ -245,8 +251,10 @@ error_reporting(E_ALL);
                         }
 
                         $counter++;
-                        echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" '
-                        . 'onclick="schankGesamtFertig(' . $arrayListe . ',' . $tischnr . ');"/>';
+                        if ($row['bestellt'] == 1) {
+                            echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" '
+                            . 'onclick="schankGesamtFertig(' . $arrayListe . ',' . $tischnr . ');"/>';
+                        }
                         echo '<br><h1>&nbsp;</h1>';
                         echo '</div>';
 

@@ -24,8 +24,9 @@ error_reporting(E_ALL);
                     $sql = "SELECT `positionen`.`type`,"
                             . "tische.tischname, "
                             . "bestellungen.tischnummer, "
-                            . "FLOOR( UNIX_TIMESTAMP(  bestellungen.zeitstempel ) /300 ) AS t, COUNT( * ), "
-                            . "kellner "
+                            . "`bestellungen`.`bestellt`, "
+                            . "FLOOR( UNIX_TIMESTAMP(  bestellungen.zeitstempel ) /300 ) AS t, "
+                            . "COUNT( * ), kellner "
                             . "FROM bestellungen, "
                             . "positionen,tische "
                             . "WHERE tische.tischnummer=bestellungen.tischnummer "
@@ -43,7 +44,12 @@ error_reporting(E_ALL);
                         $t = $row['t'];
 
                         if ($tischnummerselect != $row['tischnummer']) {
-                            echo '<div class="ui-block-a">';
+                            if ($row['bestellt'] == 1) {
+                                echo '<div style="background-color: #0ed615;" class="ui-block-a">';
+                            } else {
+                                echo '<div style="background-color: #ff0000;" class="ui-block-a">';
+                            }
+
                             echo '<h2 style="font-size:30px">Tisch: ' . $row['tischname'] . '</h2>'; //. ' (#' . $row['tischnummer'] . 
                             $tischname = $row['tischname'];
                             echo '</div>';
@@ -249,10 +255,10 @@ error_reporting(E_ALL);
                             . '</script>';
                         }
                         $counter++;
-                        echo '<input style="background-color:#00FF6A; color:#f99;" '
-                        . 'type="button" '
-                        . 'value="Gesamte Bestellung fertig" '
-                        . 'onclick="kuecheGesamtFertig(' . $arrayListe . ');"/>';
+                        if ($row['bestellt'] == 1) {
+                            echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" '
+                            . 'onclick="kuecheGesamtFertig(' . $arrayListe . ');"/>';
+                        }
                         echo '<br><h1>&nbsp;</h1>';
                         echo '</div>';
 
