@@ -1,7 +1,7 @@
 Readme - Stats
 abkürzung für Statistik.
 Hier kommen alle Diagramme hinein, die später mit "echo '<img src="\stat\Stat-Storno-Kellner.php">';  verwendet werden.
-Zum Testen mit dem Browser auf http://ff-pos.square7.ch/stat/Stat-Storno-Kellner.php gehen.
+Zum Testen mit dem Browser auf http://example.com/stat/Stat-Storno-Kellner.php gehen.
 
 
 bei pChart muss daher folgende Pfade geändert werden:
