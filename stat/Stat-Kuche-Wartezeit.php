@@ -17,8 +17,11 @@
  $MyData = new pData();  
 	/* Build the query that will returns the data to graph */
 	$Requete = "
-		SELECT DATE_FORMAT( bestellungen.zeitstempel, '%H:%i' ) AS Bestellzeit, AVG( TIMESTAMPDIFF(
-		MINUTE , bestellungen.zeitstempel, zeitKueche ) ) AS diffzeit, COUNT( * ) AS anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t
+		SELECT DATE_FORMAT( bestellungen.zeitstempel, '%H:%i' ) AS Bestellzeit, 
+		AVG( TIMESTAMPDIFF(MINUTE , bestellungen.zeitstempel, zeitKueche ) ) AS diffzeit, 
+		MAX( TIMESTAMPDIFF(MINUTE , bestellungen.zeitstempel, zeitKueche ) ) AS maxzeit, 
+		MIN( TIMESTAMPDIFF(MINUTE , bestellungen.zeitstempel, zeitKueche ) ) AS minzeit, 
+		COUNT( * ) AS anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t
 		FROM bestellungen, positionen
 		WHERE positionen.rowid = bestellungen.position
 		AND `delete` =0
@@ -29,65 +32,28 @@
 		BY t
 		ORDER BY Bestellzeit ASC";
 	$Result = mysqli_query($conn, $Requete);
-	$Bestellzeit=""; $diffzeit="";
+	$Bestellzeit=""; $diffzeit=""; $maxzeit=""; $minzeit="";
 	while ($row = mysqli_fetch_array ($Result))
 	{
 	/* Get the data from the query result */
 		$Bestellzeit = $row["Bestellzeit"];
 		$diffzeit = $row["diffzeit"];
+		$minzeit = $row["minzeit"];
+		$maxzeit = $row["maxzeit"];
+		
 		$MyData->addPoints($Bestellzeit,"Bestellzeit");
 		$MyData->addPoints($diffzeit,"diffzeit");
-	}
-	
-$MyData->setAxisName(2,"diffzeit");
-$MyData->setSerieDescription("Bestellzeit","Bestellzeit");	
-$MyData->setAbscissa("Bestellzeit");
-
-
-$Requete = "
-		SELECT DATE_FORMAT( bestellungen.zeitstempel, '%H:%i' ) AS Bestellzeit, Max( TIMESTAMPDIFF(
-		MINUTE , bestellungen.zeitstempel, zeitKueche ) ) AS maxzeit, COUNT( * ) AS anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t
-		FROM bestellungen, positionen
-		WHERE positionen.rowid = bestellungen.position
-		AND `delete` =0
-		AND `kueche` =1
-		AND TYPE =1
-		AND zeitKueche != '0000-00-00 00:00:00'
-		GROUP BY t
-		ORDER BY Bestellzeit ASC";
-	$Result = mysqli_query($conn, $Requete);
-	$maxzeit="";
-	while ($row = mysqli_fetch_array ($Result))
-	{
-	/* Get the data from the query result */
-		$maxzeit = $row["maxzeit"];
+		$MyData->addPoints($minzeit,"minzeit");
 		$MyData->addPoints($maxzeit,"maxzeit");
 	}
+	
+	$MyData->setAxisName(2,"diffzeit");
+	$MyData->setSerieDescription("Bestellzeit","Bestellzeit");	
+	$MyData->setAbscissa("Bestellzeit");
 	$MyData->setSerieTicks("maxzeit",2);
 	$colour1= array("R"=>229,"G"=>11,"B"=>11);
 	$MyData->setPalette("maxzeit",$colour1);
- 
- $Requete = "
-		SELECT DATE_FORMAT( bestellungen.zeitstempel, '%H:%i' ) AS Bestellzeit, MIN( TIMESTAMPDIFF(
-		MINUTE , bestellungen.zeitstempel, zeitKueche ) ) AS minzeit, COUNT( * ) AS anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t
-		FROM bestellungen, positionen
-		WHERE positionen.rowid = bestellungen.position
-		AND `delete` =0
-		AND `kueche` =1
-		AND TYPE =1
-		AND zeitKueche != '0000-00-00 00:00:00'
-		GROUP
-		BY t
-		ORDER BY Bestellzeit ASC";
-	$Result = mysqli_query($conn, $Requete);
-	$minzeit="";
-	while ($row = mysqli_fetch_array ($Result))
-	{
-	/* Get the data from the query result */
-		$minzeit = $row["minzeit"];
-		$MyData->addPoints($minzeit,"minzeit");
-	}
- $MyData->setSerieWeight("minzeit",2);
+	$MyData->setSerieWeight("minzeit",2);
  
  /* Create the pChart object */
  $myPicture = new pImage(700,230,$MyData);
