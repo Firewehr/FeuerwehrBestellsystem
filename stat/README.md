@@ -11,9 +11,13 @@ bei pChart muss daher folgende Pfade geändert werden:
 
  /* pChart library inclusions */
  include("../include/pChart/class/pData.class.php");
+ 
  include("../include/pChart/class/pDraw.class.php");
+ 
  include("../include/pChart/class/pPie.class.php");
+ 
  include("../include/pChart/class/pImage.class.php");
+ 
  
  myPicture->setFontProperties(array("FontName"=>"../include/pChart/fonts/Forgotte.ttf"
  ...
@@ -23,6 +27,7 @@ bei pChart muss daher folgende Pfade geändert werden:
  tische.tischname as tischnr 
  
  ####################################
+ 
  SELECT SUM( positionen.betrag ) as summe , tische.tischname as tischnr FROM `bestellungen` , positionen, tische WHERE tische.tischnummer = bestellungen.tischnummer AND bestellungen.position = positionen.rowid AND bestellungen.zeitKueche != '0000-00-00 00:00:00' AND bestellungen.delete =0 GROUP BY bestellungen.tischnummer ORDER BY tischnr ASC";
  ####################################
  
@@ -30,6 +35,7 @@ bei pChart muss daher folgende Pfade geändert werden:
  Am Schluss sollte der Befehl  $myPicture->Stroke(); ausgeführt werden. Möglich sollte auch der Auto-Befehl sein.
  
  ####################################
+ 
   /* Render the picture (choose the best way) */
  $myPicture->Stroke();
  ####################################
@@ -37,6 +43,7 @@ bei pChart muss daher folgende Pfade geändert werden:
  Hier ein Beispiel für die Abfrage. Leider muss das addPoints auch in der while-Schleife sein, ansonsten nimmt er nur den letzten Wert.
  
  ####################################
+ 
  $Requete = "SELECT kellner, COUNT(*) as anzahl FROM `bestellungen` WHERE bestellungen.delete != 0 GROUP BY kellner";
 	$Result = mysqli_query($conn, $Requete);
 	$kellner=""; $anzahl="";
@@ -52,7 +59,9 @@ bei pChart muss daher folgende Pfade geändert werden:
 #####################################
 
 Farbe ändern von Linien:
+
 #####################################
+
 $serieSettings = array("R"=>229,"G"=>11,"B"=>11);
 $MyData->setPalette("Serie1",$serieSettings);
 #####################################
