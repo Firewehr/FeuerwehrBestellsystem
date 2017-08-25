@@ -32,7 +32,7 @@ try {
 
     </form>
     <table border="1" class="table" id="tischTable">
-        <thead><tr><th>Name</th><th>Positionsname</th><th>Kurzbezeichnung</th><th>Betrag</th></tr></thead>
+        <thead><tr><th>Reihenfolge</th><th>Positionsname</th><th>Kurzbezeichnung</th><th>Betrag</th></tr></thead>
         <?php
         if (mysqli_num_rows($result) > 0) {
             $countx = 1;
