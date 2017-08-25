@@ -5,7 +5,9 @@ Zum Testen mit dem Browser auf http://example.com/stat/Stat-Storno-Kellner.php g
 
 
 bei pChart muss daher folgende Pfade geändert werden:
+
 ####################################
+
 /* CAT:Labels */
  include ("../include/db.php"); /* Datenbank BN+PW  */
 
