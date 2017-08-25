@@ -51,4 +51,8 @@ bei pChart muss daher folgende Pfade geändert werden:
 	}
 #####################################
 
-
+Farbe ändern von Linien:
+#####################################
+$serieSettings = array("R"=>229,"G"=>11,"B"=>11);
+$MyData->setPalette("Serie1",$serieSettings);
+#####################################
