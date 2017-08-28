@@ -56,26 +56,27 @@
 	$MyData->setSerieWeight("minzeit",2);
  
  /* Create the pChart object */
- $myPicture = new pImage(700,230,$MyData);
+ $myPicture = new pImage(1400,460,$MyData);
 
  /* Turn of Antialiasing */
  $myPicture->Antialias = FALSE;
 
  /* Add a border to the picture */
- $myPicture->drawRectangle(0,0,699,229,array("R"=>0,"G"=>0,"B"=>0));
+ $myPicture->drawRectangle(0,0,1400,460,array("R"=>0,"G"=>0,"B"=>0));
  
  /* Write the chart title */ 
  $myPicture->setFontProperties(array("FontName"=>"../include/pChart/fonts/Forgotte.ttf","FontSize"=>11));
- $myPicture->drawText(150,35,"Wartezeit Kueche",array("FontSize"=>20,"Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
+ $myPicture->drawText(250,25,"Wartezeit Kueche",array("FontSize"=>20,"Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
 
  /* Set the default font */
  $myPicture->setFontProperties(array("FontName"=>"../include/pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
 
  /* Define the chart area */
- $myPicture->setGraphArea(60,40,650,200);
+ $myPicture->setGraphArea(60,40,1375,420);
 
  /* Draw the scale */
- $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>TRUE,"GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE);
+ $AxisBoundaries = array(0=>array("Min"=>0,"Max"=>30));
+ $scaleSettings = array("Mode"=>SCALE_MODE_MANUAL,"ManualScale"=>$AxisBoundaries,"XMargin"=>10,"YMargin"=>10,"Floating"=>TRUE,"GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE);
  $myPicture->drawScale($scaleSettings);
 
  /* Turn on Antialiasing */
@@ -85,7 +86,7 @@
  $myPicture->drawLineChart();
 
  /* Write the chart legend */
- $myPicture->drawLegend(540,20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+ $myPicture->drawLegend(1260,16,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
 
  /* Render the picture (choose the best way) */
  $myPicture->Stroke();
