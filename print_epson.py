@@ -26,9 +26,8 @@ def EpsonFinishCut(total):
 
 url = 'url to pos system.... /print.php?type=1' #type=1 => Speisen, type=2 => Getränke
 
-
 while 1:
-    try:
+	try:
 		print("Daten abrufen " + str(datetime.datetime.now().time()))
 		Epson.set(height=1,align='left')
 		data = ""
@@ -45,7 +44,6 @@ while 1:
 			if i['tischnummer'] == tischnummer:
 				print(i['cnt'] + "x " + i['Kurzbezeichnung'] + " a " + i['betrag'])
 				total = total + (float(i['betrag']) * float(i['cnt']))
-				#with open("printPOS.txt", "a") as myfile:
 				#myfile.write(i['cnt'] + "x" + i['Kurzbezeichnung'] + "\x09\x1B\x61\x01" + str(format(float(i['betrag']) * float(i['cnt']), ',.2f'))  + "\x1B!\x00\n")
 				Epson.text(i['cnt'] + "x" + i['Kurzbezeichnung'] + "\x09\x1B\x61\x01" + str(format(float(i['betrag']) * float(i['cnt']), ',.2f')) +  "\x1B!\x00\n")
 
@@ -73,11 +71,11 @@ while 1:
 				Epson.text(i['cnt'] + "x" + i['Kurzbezeichnung'] + "\x09\x1B\x61\x01" + str(format(float(i['betrag']) * float(i['cnt']), ',.2f')) +  "\x1B!\x00\n")
 				if anzahlZeilen == 1:
 					EpsonFinishCut(total)
-	
+
 		time.sleep(2)
-    
-    except:
-        e = sys.exc_info()[0]
-        print("Fehler", e)
-        print(sys.exc_info())
-	time.sleep(20)
+
+	except:
+		e = sys.exc_info()[0]
+		print("Fehler", e)
+		print(sys.exc_info())
+		time.sleep(20)
