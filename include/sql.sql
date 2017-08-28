@@ -59,7 +59,8 @@ CREATE TABLE `bestellungen` (
   `timestampBezahlung` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `kellnerZahlung` text CHARACTER SET utf8 NOT NULL,
   `ZusatzInfo` text COLLATE latin1_german1_ci NOT NULL,
-  `betrag` double NOT NULL
+  `betrag` double NOT NULL,
+  `bestellt` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 -- --------------------------------------------------------
