@@ -17,7 +17,7 @@
  /* Create and populate the pData object */
  $MyData = new pData();  
 	/* Build the query that will returns the data to graph */
-	$Requete = "SELECT SUM( positionen.betrag ) as summe , tische.tischname as tischnr FROM `bestellungen` , positionen, tische WHERE tische.tischnummer = bestellungen.tischnummer AND bestellungen.position = positionen.rowid AND bestellungen.zeitKueche != '0000-00-00 00:00:00' AND bestellungen.delete =0 GROUP BY bestellungen.tischnummer ORDER BY tischnr ASC";
+	$Requete = "SELECT SUM( positionen.betrag ) as summe , tische.tischname as tischnr FROM `bestellungen` , positionen, tische WHERE tische.tischnummer = bestellungen.tischnummer AND bestellungen.position = positionen.rowid AND bestellungen.zeitKueche != '0000-00-00 00:00:00' AND bestellungen.delete =0 GROUP BY bestellungen.tischnummer ORDER BY summe DESC";
 	$Result = mysqli_query($conn, $Requete);
 	$tischnr=""; $summe="";
 	while ($row = mysqli_fetch_array ($Result))
