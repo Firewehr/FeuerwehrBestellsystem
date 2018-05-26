@@ -3,4 +3,3 @@
 
 print /D:"\\%COMPUTERNAME%\Receipt Printer" printPOS.txt
 
-
