@@ -159,7 +159,7 @@ error_reporting(E_ALL);
                                 . "AND positionen.type=1 "
                                 . "AND bestellungen.print=2 "
                                 . "AND bestellungen.delete=0 "
-                                . "AND bestellungen.zeitKueche!='0000-00-00 00:00:00' "
+                                // Ansonsten druckt er nicht bei "Gesamt Fertig" die bereits hergerichteten Speisen . "AND bestellungen.zeitKueche!='0000-00-00 00:00:00' "
                                 . "AND bestellungen.tischnummer=" . $tischnummerselect . " "
                                 . "AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " "
                                 . "GROUP BY bestellungen.Zusatzinfo, "
