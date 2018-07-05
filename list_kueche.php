@@ -164,7 +164,12 @@ error_reporting(E_ALL);
                         while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der bereits gerichteten Bestellungen
                             if ($row2['kueche'] == 1) {
                                 //bestellung wartend
-                                echo '<input class="durchgestrichen" style="text-decoration: line-through;text-decoration: overline line-through; background-color:#009933; color:#f00;" type="button" value="' . ' (' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']) . ' (' . $row2['Zusatzinfo'] . ')"/>';
+                                echo '<input class="durchgestrichen" style="text-decoration: line-through;text-decoration: overline line-through; background-color:#009933; color:#f00;" type="button" value="' . ' (' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']);
+								if (!empty($row2['Zusatzinfo'])) {
+									echo ' (' . $row2['Zusatzinfo'] . ')' ;
+								}
+								echo '"/>';
+								
                             } else {
                                 //fertig
                                 echo '<input '
@@ -202,8 +207,6 @@ error_reporting(E_ALL);
                                 . ""
                                 . "ORDER BY `bestellungen`.`zeitKueche` DESC";
                         $result6 = mysqli_query($conn, $query);
-                        //$arrayListe = substr($arrayListe, 0, -1);
-                        //$arrayListe = $arrayListe . ']';
                         while ($row2 = mysqli_fetch_assoc($result6)) { //Ausgabe der bereits gerichteten Bestellungen
                             if ($row2['kueche'] == 1) {
                                 //bestellung wartend
