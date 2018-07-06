@@ -1,12 +1,8 @@
 <a  href="#indexPage" data-theme="b" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Zurück</a>
 
 <?php
-
-require_once('auth.php');
-
 error_reporting(E_ALL);
-include('include/db.php');
-
+include_once ("include/db.php");
 $sql2 = "SELECT "
         . "tische.tischname, "
         . "`bestellungen`.`zeitKueche`, `bestellungen`.`position`, bestellungen.Zusatzinfo, `bestellungen`.`tischnummer`, `bestellungen`.`zeitstempel`, `positionen`.`rowid`, `positionen`.`Positionsname`, `positionen`.`type`, `bestellungen`.`kueche`, `bestellungen`.`delete`, `bestellungen`.`rowid` "
@@ -40,3 +36,4 @@ while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der offenen Bestellunge
     echo '</tr>';
 }
 echo '</table>';
+?>
