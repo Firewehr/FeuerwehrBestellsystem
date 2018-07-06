@@ -743,6 +743,9 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         <div data-role="page" id="KuecheHistory">
         </div>
 
+		<div data-role="page" id="SchankHistory">
+        </div>
+		
         <div data-role="page" id="listTischBestellungen">
             <a href="#listTische">zurueck</a>
         </div>
@@ -913,6 +916,13 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 //$("#KuecheHistory").html("loading ...");
                 $('#KuecheHistory').load('kueche_history.php', function () {
                     $('#KuecheHistory').trigger('create');
+                });
+            }
+			
+			function SchankHistory() {
+				//$("#KuecheHistory").html("loading ...");
+                $('#SchankHistory').load('schank_history.php', function () {
+                    $('#SchankHistory').trigger('create');
                 });
             }
 
