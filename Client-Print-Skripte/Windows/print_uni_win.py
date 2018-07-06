@@ -10,14 +10,15 @@ import os.path
 
 save_path = "C:\\POS-Daten"
 completeName = os.path.join(save_path, "printPOS.txt")
-url = 'http://ff-pos.square7.ch/print.php?type=1'
+url = 'http://ff-kassa.bplaced.net/print.php?type=2'
+#url = 'http://ff-pos.square7.ch/print.php?type=2'
 
 def EpsonFinishCut(total):
 	myfile.write("!")#Set Double Width
 	myfile.write("Total: EUR " + str(format(total, ',.2f')) + "\n")
 	myfile.write("\x1B!\x00")#Set Normal
 	myfile.write("\x1B\x61\x01")#set alignment center
-	myfile.write("\nwww.ff-XXXXXXXXX.at\n")
+	myfile.write("\nwww.ff-wetzleinsdorf.at\n")
 	myfile.write("\n\n\n\n\n\n\n\x0D\x0c")#abstand
 	myfile.write("\x1D\x56\x00\x0A")#schneiden
 	myfile.close() 
@@ -44,7 +45,7 @@ while 1:
 			if i['tischnummer'] == tischnummer:
 				print(i['cnt'] + "x " + i['Kurzbezeichnung'] + " a " + i['betrag'])
 				total = total + (float(i['betrag']) * float(i['cnt']))
-				myfile.write(i['cnt'] + "x " + i['Kurzbezeichnung'] + "\x09\x1B\x61\x01" + str(format(float(i['betrag']) * float(i['cnt']), ',.2f')) +  "\x1B!\x00\n")
+				myfile.write(i['cnt'] + "x \x09" + i['Kurzbezeichnung'] + "\x09" + str(format(float(i['betrag']), ',.2f')) + "\x09" +  str(format(float(i['betrag']) * float(i['cnt']), ',.2f')) +  "\x1B!\x00\n")
 				
 				if j >= anzahlZeilen:
 					EpsonFinishCut(total)
@@ -57,18 +58,22 @@ while 1:
 				print(i['cnt'] + "x " + i['Kurzbezeichnung'] + " a " + i['betrag'])
 				total = total + (float(i['betrag']) * float(i['cnt']))
 				myfile.write("\x1B\x61\x01")#set alignment center
+				myfile.write("\x1b\x44\x00")# Cancel previous tab settings, restores defaults
+				myfile.write("\x1b\x44\x05\x1F\x22\x24\x00")# Set tab stops at x, y, and z32 characters
 				myfile.write("!")#Set Double Width
 				myfile.write("Freiwillige Feuerwehr\n")
-				myfile.write("XXXXXXXX\n")
+				myfile.write("Wetzleinsdorf\n")
 				myfile.write("\x1B!\x00")#Set Normal
 				myfile.write("   Tisch:  ")
 				myfile.write("!3"+ i['tischname'] + "\n")
 				myfile.write("\x1B!\x00")#Set Normal
 				myfile.write("\x1B\x61\x00")#set alignment left
-				myfile.write("Kellner:  " + i['kellner'] + "\nBestellt: " + i['zeitstempel'] + "\n");#KellnerName
+				myfile.write("KellnerIn:  " + i['kellner'] + "\nBestellt: " + i['zeitstempel'] + "\n");#KellnerName
 				myfile.write("          " + i['zeitKueche'] + "\n")
-				myfile.write("\x1B\x44\x03\x19\x00")#set horizontal tabs myfile.write("\x1B\x44\x02\x03\x19\x00")#set horizontal tabs
-				myfile.write(i['cnt'] + "x " + i['Kurzbezeichnung'] + "\x09\x1B\x61\x01" + str(format(float(i['betrag']) * float(i['cnt']), ',.2f')) +  "\x1B!\x00\n")
+				myfile.write("\x1b\x2d\x01")
+				myfile.write("Anz" + "\x09" + "Artikel" + "\x09" + "Stk" + "\x09" + "Ges\n")
+				myfile.write("\x1b\x2d\x00")
+				myfile.write(i['cnt'] + "x \x09" + i['Kurzbezeichnung'] + "\x09" + str(format(float(i['betrag']), ',.2f')) + "\x09" +  str(format(float(i['betrag']) * float(i['cnt']), ',.2f')) +  "\x1B!\x00\n")
 				
 				if anzahlZeilen == 1:
 					EpsonFinishCut(total)
