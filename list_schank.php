@@ -1,13 +1,12 @@
 <?php
 require_once('auth.php');
 error_reporting(E_ALL);
-//TODO: https://wiki.selfhtml.org/wiki/JavaScript/Objekte/Array
 ?>
 
 <div data-role="header">
     <h1>Schank</h1>
     <a href="#indexPage" onclick="AnzahlBestellungenAktuell = -1;" class="ui-btn-left"> Zur&uuml;ck </a>
-    <a onclick="SchankAnsicht();" class="ui-btn-right"> Aktualisieren </a>
+	<a href="#SchankHistory" onclick="SchankHistory();" class="ui-btn-right">Historie</a>
 </div>
 
 <div class="ui-grid-a ui-responsive">
@@ -61,6 +60,42 @@ error_reporting(E_ALL);
                         echo '<div class="ui-block-a">';
 
                         $tischnummerselect = $row['tischnummer'];
+						
+						//Abfrage ohne Group um die einzelnen ID's zu bekommen
+                        $query23 = "SELECT `bestellungen`.`zeitKueche`, "
+                                . "`bestellungen`.`position`, "
+                                . "`bestellungen`.`tischnummer`, "
+                                . "`bestellungen`.`zeitstempel`, "
+                                . "`positionen`.`rowid`, "
+                                . "`positionen`.`Positionsname`, "
+                                . "`positionen`.`type`, "
+                                . "`bestellungen`.`kueche`, "
+                                . "`bestellungen`.`delete`, "
+                                . "`bestellungen`.`rowid`, "
+                                . "FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  "
+                                . "FROM bestellungen, positionen "
+                                . "WHERE bestellungen.position=positionen.rowid "
+                                . "AND `type`=2 "
+                                // Ansonsten druckt er nicht bei "Gesamt Fertig" die bereits hergerichteten Speisen#. "AND bestellungen.zeitKueche='0000-00-00 00:00:00' "
+								. "AND bestellungen.print <> 1 "
+                                . "AND bestellungen.ausgeliefert=0 "
+                                . "AND positionen.type=2 "
+                                . "AND bestellungen.delete=0 "
+                                . "AND bestellungen.tischnummer=" . $tischnummerselect . " "
+                                . "AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " "
+                                . "ORDER BY positionen.Positionsname ASC";
+                        $result23 = mysqli_query($conn, $query23);
+                        $arrayListe = '[';
+
+                        while ($row23 = mysqli_fetch_assoc($result23)) { //Ausgabe der offenen Bestellungen eines Tisches
+                            $Bestellungen = $Bestellungen . $row23['rowid'] . " OR rowid=";
+                            $arrayListe = $arrayListe . $row23['rowid'] . ',';
+                            $timestampBestellung = $row23['zeitstempel'];
+                            $tischnr = $row23['tischnummer'];
+                        }
+
+						$arrayListe = substr($arrayListe, 0, -1);
+                        $arrayListe = $arrayListe . ']';
 
                         $sql2 = "SELECT COUNT( * ) AS anzahl, "
                                 . "`bestellungen`.`zeitKueche`, "
@@ -95,43 +130,15 @@ error_reporting(E_ALL);
                             if (!empty($row2['Zusatzinfo'])) {
                                 echo ' (' . $row2['Zusatzinfo'] . ') ';
                             }
+							if (mysqli_num_rows($result2)==1 && $row2['anzahl'] == 1) {
+							echo '" onclick="schankGesamtFertig(' . $arrayListe . ');"/>';
+							}
+							else {
                             echo '" onclick="SchankFertig(' . $row2['rowid'] . ');"/>';
+							}
                             $timestamp = strtotime($row2['zeitstempel']);
                         }
-
-                        //Abfrage ohne Group um die einzelnen ID's zu bekommen
-                        $query23 = "SELECT `bestellungen`.`zeitKueche`, "
-                                . "`bestellungen`.`position`, "
-                                . "`bestellungen`.`tischnummer`, "
-                                . "`bestellungen`.`zeitstempel`, "
-                                . "`positionen`.`rowid`, "
-                                . "`positionen`.`Positionsname`, "
-                                . "`positionen`.`type`, "
-                                . "`bestellungen`.`kueche`, "
-                                . "`bestellungen`.`delete`, "
-                                . "`bestellungen`.`rowid`, "
-                                . "FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  "
-                                . "FROM bestellungen, positionen "
-                                . "WHERE bestellungen.position=positionen.rowid "
-                                . "AND `type`=2 "
-                                . "AND bestellungen.zeitKueche='0000-00-00 00:00:00' "
-                                . "AND bestellungen.ausgeliefert=0 "
-                                . "AND positionen.type=2 "
-                                . "AND bestellungen.delete=0 "
-                                . "AND bestellungen.tischnummer=" . $tischnummerselect . " "
-                                . "AND FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/300)=" . $t . " "
-                                . "ORDER BY positionen.Positionsname ASC";
-                        $result23 = mysqli_query($conn, $query23);
-                        $arrayListe = '[';
-
-                        while ($row23 = mysqli_fetch_assoc($result23)) { //Ausgabe der offenen Bestellungen eines Tisches
-                            $Bestellungen = $Bestellungen . $row23['rowid'] . " OR rowid=";
-                            $arrayListe = $arrayListe . $row23['rowid'] . ',';
-                            $timestampBestellung = $row23['zeitstempel'];
-                            $tischnr = $row23['tischnummer'];
-                        }
-
-
+                        
                         echo '</div>';
                         echo '<div class="ui-block-b">';
 
@@ -214,8 +221,7 @@ error_reporting(E_ALL);
 
                         $result6 = mysqli_query($conn, $query);
 
-                        $arrayListe = substr($arrayListe, 0, -1);
-                        $arrayListe = $arrayListe . ']';
+
 
                         while ($row2 = mysqli_fetch_assoc($result6)) { //Ausgabe der bereits gerichteten Bestellungen
                             if ($row2['kueche'] == 1) {
