@@ -39,11 +39,11 @@ try {
             $county = 1;
 
             while ($row = mysqli_fetch_assoc($result)) {
-                $x = $row['x'];
-                $y = $row['y'];
+                //$x = $row['x'];
+                //$y = $row['y'];
 
-                $lastx = $x;
-                $lasty = $y;
+                //$lastx = $x;
+                //$lasty = $y;
 
                 echo "<tr>";
 
