@@ -194,7 +194,7 @@ include('../auth.php');
 
                                 //Betrag = prompt("Betrag neu:", Betrag);
 
-                                console.log("Update Betrag");
+                                console.log("del Table");
                                 //if (Betrag >=0) {
                                 $.ajax({
                                     url: 'delete_table.php?tischnummer=' + tischnummer,
@@ -213,7 +213,7 @@ include('../auth.php');
 
                                 //Betrag = prompt("Betrag neu:", Betrag);
 
-                                console.log("Update Betrag");
+                                console.log("del meal");
                                 //if (Betrag >=0) {
                                 $.ajax({
                                     url: 'delete_meal.php?rowid=' + rowid,
@@ -233,19 +233,24 @@ include('../auth.php');
 
                                 Betrag = prompt("Betrag neu:", Betrag);
 
-                                console.log("Update Betrag");
-                                if (Betrag >= 0) {
-                                    $.ajax({
-                                        url: 'update_betrag.php?rowid=' + rowid + '&Betrag=' + Betrag,
-                                        type: "get",
-                                        complete: function (data, responseText) {
-                                            loadSpeisekarte()();
-                                        },
-                                        success: function (data) {
+                                if (Betrag == null || Betrag == "") {
+                                    console.log("editBetrag cancled");
+                                } else {
 
-                                        },
-                                        dataType: "json"
-                                    });
+                                    console.log("Update Betrag");
+                                    if (Betrag >= 0) {
+                                        $.ajax({
+                                            url: 'update_betrag.php?rowid=' + rowid + '&Betrag=' + Betrag,
+                                            type: "get",
+                                            complete: function (data, responseText) {
+                                                loadSpeisekarte()();
+                                            },
+                                            success: function (data) {
+
+                                            },
+                                            dataType: "json"
+                                        });
+                                    }
                                 }
                             }
 
@@ -253,25 +258,30 @@ include('../auth.php');
 
                                 reihenfolge = prompt("neu:", reihenfolge);
 
-                                console.log("Update Reihenfolge");
-                                if (reihenfolge >= 0) {
-                                    $.ajax({
-                                        url: 'update_reihenfolge.php?rowid=' + rowid + '&reihenfolge=' + reihenfolge,
-                                        type: "get",
-                                        complete: function (data, responseText) {
-                                            loadSpeisekarte()();
-                                        },
-                                        success: function (data) {
+                                if (reihenfolge == null || reihenfolge == "") {
+                                    console.log("editReihenfolge cancled");
+                                } else {
 
-                                        },
-                                        dataType: "json"
-                                    });
+                                    console.log("Update Reihenfolge");
+                                    if (reihenfolge >= 0) {
+                                        $.ajax({
+                                            url: 'update_reihenfolge.php?rowid=' + rowid + '&reihenfolge=' + reihenfolge,
+                                            type: "get",
+                                            complete: function (data, responseText) {
+                                                loadSpeisekarte()();
+                                            },
+                                            success: function (data) {
+
+                                            },
+                                            dataType: "json"
+                                        });
+                                    }
                                 }
                             }
                             function addPosition(Positionsname, type, Betrag) {
 
 
-                                console.log("Update Betrag");
+                                console.log("add Position");
                                 if (Betrag >= 0) {
                                     $.ajax({
                                         url: 'insert_meal.php?Positionsname=' + Positionsname + '&Betrag=' + Betrag + '&type=' + type,
