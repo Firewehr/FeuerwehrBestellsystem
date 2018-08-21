@@ -26,15 +26,16 @@ error_reporting(E_ALL);
                             . "`bestellungen`.`bestellt`, "
                             . "FLOOR( UNIX_TIMESTAMP(  bestellungen.zeitstempel ) /300 ) AS t, "
                             . "COUNT( * ), kellner "
-                            . "FROM bestellungen, "
-                            . "positionen,tische "
-                            . "WHERE tische.tischnummer=bestellungen.tischnummer "
-                            . "AND bestellungen.position=positionen.rowid "
-                            . "AND `delete`=0 "
+                            . "FROM bestellungen "
+                            . "JOIN positionen ON bestellungen.position=positionen.rowid "
+                            . "JOIN tische ON tische.tischnummer=bestellungen.tischnummer "
+                            . "WHERE "
+                            . "`delete`=0 "
                             . "AND `kueche`=0 "
                             . "AND `type`=2 GROUP BY t, "
                             . "bestellungen.tischnummer "
                             . "ORDER BY bestellungen.zeitstempel, t LIMIT 50";
+                    //echo $sql;
 
                     $result = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($result)) {
@@ -278,9 +279,10 @@ error_reporting(E_ALL);
                 try {
                     include_once ("include/db.php");
                     $sql5 = "SELECT COUNT( * ) AS anzahl "
-                            . "FROM bestellungen, positionen "
-                            . "WHERE bestellungen.position = positionen.rowid "
-                            . "AND positionen.type=2 "
+                            . "FROM bestellungen "
+                            . "JOIN positionen ON bestellungen.position = positionen.rowid "
+                            . "WHERE "
+                            . "positionen.type=2 "
                             . "AND bestellungen.delete=0 "
                             . "AND `kueche`=0";
                     $query5 = mysqli_query($conn, $sql5);

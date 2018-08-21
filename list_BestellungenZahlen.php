@@ -31,9 +31,9 @@ require_once('auth.php');
                 . "`bestellungen`.`rowid` as rowidBestellung,"
                 . "`bestellungen`.`delete`,"
                 . "`bestellungen`.`kueche` AS kuechef "
-                . "FROM `bestellungen`, `positionen` "
-                . "WHERE  `positionen`.`rowid`=`bestellungen`.`position` "
-                . "AND `bestellungen`.`tischnummer`=" . $Tischnummer . ' '
+                . "FROM `bestellungen` "
+                . "JOIN positionen ON `positionen`.`rowid`=`bestellungen`.`position` "
+                . "WHERE `bestellungen`.`tischnummer`=" . $Tischnummer . ' '
                 . 'AND `bestellungen`.`delete`=0 '
                 . 'AND `bestellungen`.`kueche`=1 '
                 . 'AND `bestellungen`.`timestampBezahlung`="0000-00-00 00:00:00" '

@@ -234,7 +234,17 @@ if ($_SESSION['admin'] != 1) {
                 die("Connection failed: " . mysqli_connect_error());
             }
             //echo $row4['rowid'];
-            $sql = "SELECT COUNT(*) as cnt, kellnerZahlung,SUM(positionen.Betrag) as summe FROM `bestellungen`,positionen WHERE bestellungen.position=positionen.rowid AND `delete`=0 AND timestampBezahlung!='0000-00-00 00:00:00' GROUP by kellnerZahlung ORDER BY kellnerZahlung";
+            $sql = "SELECT COUNT(*) as cnt, "
+                    . "kellnerZahlung,"
+                    . "SUM(positionen.Betrag) as summe "
+                    . "FROM `bestellungen`,"
+                    . "positionen "
+                    . "WHERE "
+                    . "bestellungen.position=positionen.rowid AND "
+                    . "`delete`=0 "
+                    . "AND timestampBezahlung!='0000-00-00 00:00:00' "
+                    . "GROUP by kellnerZahlung "
+                    . "ORDER BY kellnerZahlung";
             //echo $sql;
             
             setlocale(LC_MONETARY,"de_DE"); //needed for money_format
@@ -256,7 +266,12 @@ if ($_SESSION['admin'] != 1) {
             echo '<div id="Anzahl Aufgenommene Bestellungen" data-role="collapsible" data-collapsed="true">';
 
             echo '<h2>Kellner Aufgenommene Positionen</h2>';
-            $sql = "SELECT kellner, COUNT(*) as anzahl FROM `bestellungen`,positionen WHERE bestellungen.position=positionen.rowid AND bestellungen.zeitKueche!='0000-00-00 00:00:00' AND bestellungen.delete=0 GROUP BY kellner";
+            $sql = "SELECT kellner, COUNT(*) as anzahl "
+                    . "FROM `bestellungen` "
+                    . "JOIN positionen ON bestellungen.position=positionen.rowid "
+                    . "WHERE bestellungen.zeitKueche!='0000-00-00 00:00:00' "
+                    . "AND bestellungen.delete=0 "
+                    . "GROUP BY kellner";
             //echo $sql;
             $result = mysqli_query($conn, $sql);
             echo '<table>';
@@ -272,7 +287,14 @@ if ($_SESSION['admin'] != 1) {
 
             echo '<div id="Umsatz pro Tisch" data-role="collapsible" data-collapsed="true">';
             echo '<h2>Umsatz pro Tisch</h2>';
-            $sql = "SELECT SUM( positionen.betrag ) as summe , tische.tischname FROM `bestellungen` , positionen, tische WHERE tische.tischnummer = bestellungen.tischnummer AND bestellungen.position = positionen.rowid AND bestellungen.zeitKueche != '0000-00-00 00:00:00' AND bestellungen.delete =0 GROUP BY bestellungen.tischnummer ORDER BY tische.tischname ASC";
+            $sql = "SELECT SUM( positionen.betrag ) as summe , tische.tischname "
+                    . "FROM `bestellungen` "
+                    . "JOIN positionen ON bestellungen.position=positionen.rowid "
+                    . "JOIN tische ON tische.tischnummer = bestellungen.tischnummer "
+                    . "WHERE bestellungen.zeitKueche != '0000-00-00 00:00:00' "
+                    . "AND bestellungen.delete =0 "
+                    . "GROUP BY bestellungen.tischnummer "
+                    . "ORDER BY tische.tischname ASC";
 
             $result = mysqli_query($conn, $sql);
             echo '<table data-mode="columntoggle"><thead><th>Tisch#</th><th>Umsatz</th></thead><tbody>';
@@ -285,7 +307,16 @@ if ($_SESSION['admin'] != 1) {
 
             echo '<div id="durchschnittliche wartezeit je Position" data-role="collapsible" data-collapsed="true">';
             echo '<h2>Wartezeit je Position</h2>';
-            $sql = "SELECT positionen.Positionsname, AVG(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS avgzeit, MAX(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS maxzeit,  COUNT(*) as anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t FROM bestellungen, positionen WHERE positionen.rowid = bestellungen.position AND `delete` = 0 AND `kueche` = 1 AND zeitKueche != '0000-00-00 00:00:00' GROUP BY bestellungen.position ORDER BY avgzeit DESC";
+            $sql = "SELECT positionen.Positionsname, "
+                    . "AVG(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS avgzeit, "
+                    . "MAX(TIMESTAMPDIFF(MINUTE, bestellungen.zeitstempel, zeitKueche)) AS maxzeit,  "
+                    . "COUNT(*) as anzahl, FLOOR( UNIX_TIMESTAMP( bestellungen.zeitstempel ) /900 ) AS t "
+                    . "FROM bestellungen "
+                    . "JOIN positionen ON positionen.rowid = bestellungen.position "
+                    . "WHERE `delete` = 0 "
+                    . "AND `kueche` = 1 "
+                    . "AND zeitKueche != '0000-00-00 00:00:00' "
+                    . "GROUP BY bestellungen.position ORDER BY avgzeit DESC";
 
             $result = mysqli_query($conn, $sql);
             echo '<table>';
@@ -311,7 +342,11 @@ if ($_SESSION['admin'] != 1) {
 
             echo '<div id="Wartezeit" data-role="collapsible" data-collapsed="true">';
 
-            $result = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00'");
+            $result = mysqli_query($conn, "SELECT COUNT(*) as cnt "
+                    . "FROM bestellungen "
+                    . "WHERE `delete`=0 "
+                    . "AND `kueche`=0 "
+                    . "AND zeitKueche='0000-00-00 00:00:00'");
             while ($row3 = mysqli_fetch_assoc($result)) {
                 //echo "<li>Wartende Bestellungen: " . utf8_encode($row3['cnt']) . "</li>";
                 echo '<h3>AKTUELL ' . utf8_encode($row3['cnt']) . ' Positionen wartend</h3>';
@@ -320,7 +355,14 @@ if ($_SESSION['admin'] != 1) {
 
             echo '<h3>Wartezeit der AKTUELL offenen Bestellungen</h3>';
             echo '<table><tr><th>Bestellung</th><th>Wartezeit</th></tr>';
-            $sql = "SELECT TIMEDIFF(now(),zeitstempel) as zeit, FLOOR( UNIX_TIMESTAMP( zeitstempel ) /120 ) AS t, COUNT( * )  FROM bestellungen WHERE `delete`=0 AND `kueche`=0 AND zeitKueche='0000-00-00 00:00:00' GROUP BY t ORDER BY t DESC LIMIT 10";
+            $sql = "SELECT TIMEDIFF(now(),zeitstempel) as zeit, "
+                    . "FLOOR( UNIX_TIMESTAMP( zeitstempel ) /120 ) AS t, "
+                    . "COUNT( * )  "
+                    . "FROM bestellungen "
+                    . "WHERE `delete`=0 AND `kueche`=0 "
+                    . "AND zeitKueche='0000-00-00 00:00:00' "
+                    . "GROUP BY t "
+                    . "ORDER BY t DESC LIMIT 10";
             $result = mysqli_query($conn, $sql);
 
             while ($row4 = mysqli_fetch_assoc($result)) {
