@@ -95,7 +95,7 @@ if ($_SESSION['admin'] != 1) {
                     }
                     echo '</td>';
                     echo '<td>' . $row['timestamp'] . '</td';
-                    echo '<td><input value="PW ändern" type="button" onclick="updatePW(' . $row['id'] . ')"></td>';
+                    echo '<td><a onclick="updatePW(' . $row['id'] . ')" href="#" class="ui-btn ui-icon-edit ui-btn-icon-left">PW ändern</a></td>';
                     echo '</tr>';
                 }
 
@@ -248,18 +248,18 @@ if ($_SESSION['admin'] != 1) {
                     . "GROUP by kellnerZahlung "
                     . "ORDER BY kellnerZahlung";
             //echo $sql;
-            
-            setlocale(LC_MONETARY,"de_DE"); //needed for money_format
-            
+
+            setlocale(LC_MONETARY, "de_DE"); //needed for money_format
+
             $result = mysqli_query($conn, $sql);
             echo '<table>';
             echo '<tr><th>Kellner</th><th>Anzahl</th><th>Betrag</th></tr>';
-            $summe=0;
+            $summe = 0;
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td align="left">' . $row['cnt'] . '</td><td align="right">' . money_format("%i", $row['summe']) . '</td></tr>';
-                $summe=$summe+$row['summe'];
+                $summe = $summe + $row['summe'];
             }
-            
+
             echo '<tr><td>Summe</td><td>&nbsp;</td><td>' . money_format("%i", $summe) . ' </td></tr>';
             echo '</table>';
             echo '</div>';
@@ -322,10 +322,10 @@ if ($_SESSION['admin'] != 1) {
 
             $result = mysqli_query($conn, $sql);
             echo '<table>';
-            
+
             echo '<tr><th>Position</th><th>Durchschnitt</th><th>Maximum</th></tr>';
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . utf8_encode($row['Positionsname']) . '</td><td align="left">' . round($row['avgzeit'],2) . '</td><td>' . $row['maxzeit'] . '</td></tr>';
+                echo '<tr><td>' . utf8_encode($row['Positionsname']) . '</td><td align="left">' . round($row['avgzeit'], 2) . '</td><td>' . $row['maxzeit'] . '</td></tr>';
             }
             echo '</table>';
             echo '</div>';
