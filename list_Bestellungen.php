@@ -7,7 +7,25 @@ require_once('auth.php');
 $Tischnummer = intval($_GET['tischnummer']);
 try {
     include_once ("include/db.php");
-    $sql = "SELECT `bestellungen`.`tischnummer`,bestellungen.kellner,bestellungen.kellnerZahlung,bestellungen.timestampBezahlung, bestellungen.timestampBezahlung, bestellungen.Zusatzinfo, `positionen`.`Betrag` as betrag, `positionen`.`Positionsname`, `bestellungen`.`zeitKueche`,`bestellungen`.`position`, `positionen`.`rowid`, `bestellungen`.`zeitstempel`, `bestellungen`.`rowid`,`bestellungen`.`delete`,`bestellungen`.`kueche` AS kuechef FROM `bestellungen`, `positionen` WHERE  `positionen`.`rowid`=`bestellungen`.`position` AND `bestellungen`.`tischnummer`=" . $Tischnummer . ' AND `bestellungen`.`delete`=0 ORDER BY bestellungen.zeitstempel DESC LIMIT 30';
+    $sql = "SELECT `bestellungen`.`tischnummer`,"
+            . "bestellungen.kellner,"
+            . "bestellungen.kellnerZahlung,"
+            . "bestellungen.timestampBezahlung, "
+            . "bestellungen.timestampBezahlung, "
+            . "bestellungen.Zusatzinfo, "
+            . "`positionen`.`Betrag` as betrag, "
+            . "`positionen`.`Positionsname`, "
+            . "`bestellungen`.`zeitKueche`,"
+            . "`bestellungen`.`position`, "
+            . "`positionen`.`rowid`, `bestellungen`.`zeitstempel`, "
+            . "`bestellungen`.`rowid`,`bestellungen`.`delete`,"
+            . "`bestellungen`.`kueche` AS kuechef "
+            . "FROM `bestellungen` "
+            . "JOIN positionen ON `positionen`.`rowid`=`bestellungen`.`position` "
+            . "WHERE `bestellungen`.`tischnummer`=" . $Tischnummer . ' '
+            . 'AND `bestellungen`.`delete`=0 '
+            . 'ORDER BY bestellungen.zeitstempel '
+            . 'DESC LIMIT 30';
     $result1 = mysqli_query($conn, $sql);
     $Summe = 0;
     ?>
