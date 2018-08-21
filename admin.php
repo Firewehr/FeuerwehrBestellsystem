@@ -76,6 +76,7 @@ if ($_SESSION['admin'] != 1) {
                 . '<th>Benutzer</th>'
                 . '<th>Benutzerrechte</th>'
                 . '<th>Erstellungsdatum</th>'
+                . '<th></th>'
                 . '</tr>'
                 . '</thead>';
 
@@ -94,6 +95,7 @@ if ($_SESSION['admin'] != 1) {
                     }
                     echo '</td>';
                     echo '<td>' . $row['timestamp'] . '</td';
+                    echo '<td><input value="PW ändern" type="button" onclick="updatePW(' . $row['id'] . ')"></td>';
                     echo '</tr>';
                 }
 

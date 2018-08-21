@@ -228,7 +228,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     AdminAnsicht();
                 });
             });
-            
+
             function bestellungAbschicken(tischnummer) {
                 console.log("bestellung Abschicken" + tischnummer);
 
@@ -243,12 +243,12 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     complete: function (data) {
                         //todo: Gehe zu Tische
                         TischAnsicht();
-                        $.mobile.changePage( "#listTische", { transition: "slideup", changeHash: false });
+                        $.mobile.changePage("#listTische", {transition: "slideup", changeHash: false});
                     },
                     error: onError
-                });                
-            }            
-            
+                });
+            }
+
             function saveNeuerTisch() {
                 neuerTischName = document.getElementById('neuerTischName').value;
                 neueTischFarbe = $('#neueTischFarbe').val();
@@ -743,9 +743,9 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         <div data-role="page" id="KuecheHistory">
         </div>
 
-		<div data-role="page" id="SchankHistory">
+        <div data-role="page" id="SchankHistory">
         </div>
-		
+
         <div data-role="page" id="listTischBestellungen">
             <a href="#listTische">zurueck</a>
         </div>
@@ -918,9 +918,9 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     $('#KuecheHistory').trigger('create');
                 });
             }
-			
-			function SchankHistory() {
-				//$("#KuecheHistory").html("loading ...");
+
+            function SchankHistory() {
+                //$("#KuecheHistory").html("loading ...");
                 $('#SchankHistory').load('schank_history.php', function () {
                     $('#SchankHistory').trigger('create');
                 });
@@ -936,6 +936,29 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 $('#Schankansicht').load('list_schank.php', function () {
                     $('#Schankansicht').trigger('create');
                 });
+            }
+
+            function updatePW(userid) {
+
+                pwneu = prompt("Neues Passwort:");
+
+                if (pwneu == null || pwneu == "") {
+                    console.log("pw edit cancled");
+                } else {
+                    dataString = 'pw=' + pwneu + "&userid=" + userid;
+                    $.ajax({
+                        url: 'update_pw.php',
+                        type: "POST",
+                        data: dataString,
+                        complete: function (data, responseText) {
+                            alert("Passwort geaendert");
+                        },
+                        success: function (data) {
+
+                        },
+                        dataType: "json"
+                    });
+                }
             }
 
 
