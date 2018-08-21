@@ -192,22 +192,24 @@ include('../auth.php');
                             }
                             function deleteTable(tischnummer) {
 
-                                //Betrag = prompt("Betrag neu:", Betrag);
+                                Confirm = confirm("Wirklich löschen?");
 
-                                console.log("del Table");
-                                //if (Betrag >=0) {
-                                $.ajax({
-                                    url: 'delete_table.php?tischnummer=' + tischnummer,
-                                    type: "get",
-                                    complete: function (data, responseText) {
-                                        loadTische();
-                                    },
-                                    success: function (data) {
+                                if (Confirm === true) {
+                                    console.log("del Table");
+                                    //if (Betrag >=0) {
+                                    $.ajax({
+                                        url: 'delete_table.php?tischnummer=' + tischnummer,
+                                        type: "get",
+                                        complete: function (data, responseText) {
+                                            loadTische();
+                                        },
+                                        success: function (data) {
 
-                                    },
-                                    dataType: "json"
-                                });
-                                //}
+                                        },
+                                        dataType: "json"
+                                    });
+                                    //}
+                                }
                             }
                             function deleteMeal(rowid) {
 
