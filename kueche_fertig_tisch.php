@@ -14,19 +14,21 @@ foreach ($PositionsListe as $row) {
             . "`zeitKueche`=current_timestamp,"
             . "`kueche`= '1',"
             . "`print`=2 "
-            . "WHERE rowid=" . intval($row);
+            . "WHERE zeitKueche='0000-00-00 00:00:00' AND rowid=" . intval($row);
 
     if (mysqli_query($conn, $sql)) {
         echo "Record updated successfully";
-    } else {
-        echo "Error updating record: " . mysqli_error($conn);
-    }
 
-//Insert Print
-    $sql = "INSERT INTO print (bestellungID,timestamp) VALUES (" . intval($row) . ",'" . $timestamp . "')";
-    echo $sql;
-    if (mysqli_query($conn, $sql)) {
-        echo "Record updated successfully";
+        if (mysqli_affected_rows($conn) > 0) {
+            //Insert Print
+            $sql = "INSERT INTO print (bestellungID,timestamp) VALUES (" . intval($row) . ",'" . $timestamp . "')";
+            echo $sql;
+            if (mysqli_query($conn, $sql)) {
+                echo "Record updated successfully";
+            } else {
+                echo "Error updating record: " . mysqli_error($conn);
+            }
+        }
     } else {
         echo "Error updating record: " . mysqli_error($conn);
     }
