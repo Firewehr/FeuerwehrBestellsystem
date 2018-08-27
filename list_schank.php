@@ -261,6 +261,8 @@ error_reporting(E_ALL);
                         if ($row['bestellt'] == 1) {
                             echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" '
                             . 'onclick="schankGesamtFertig(' . $arrayListe . ',' . $tischnr . ');"/>';
+                        } else {
+							echo '<input style="background-color: #8904B1" type="button" value="FORCE Bestellung" onclick="bestellungSAAbschicken(' . $tischnummerselect . ');"/>';
                         }
                         echo '<br><h1>&nbsp;</h1>';
                         echo '</div>';
