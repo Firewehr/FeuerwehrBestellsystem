@@ -230,7 +230,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             });
 
             function bestellungAbschicken(tischnummer) {
-                console.log("bestellung Abschicken" + tischnummer);
+                console.log("bestellung Abschicken " + tischnummer);
 
                 dataString = "tischnummer=" + tischnummer;
                 $.ajax({
@@ -244,6 +244,44 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                         //todo: Gehe zu Tische
                         TischAnsicht();
                         $.mobile.changePage("#listTische", {transition: "slideup", changeHash: false});
+                    },
+                    error: onError
+                });
+            }
+			
+			function bestellungKUAbschicken(tischnummer) {
+                console.log("bestellung KUECHE Abschicken " + tischnummer);
+
+                dataString = "tischnummer=" + tischnummer;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "bestellung_abschicken.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+                        //todo: Gehe zu Tische
+                        KuechenansichtRefresh();
+                    },
+                    error: onError
+                });
+            }
+			
+			function bestellungSAAbschicken(tischnummer) {
+                console.log("bestellung SCHANK Abschicken " + tischnummer);
+
+                dataString = "tischnummer=" + tischnummer;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: "text",
+                    url: "bestellung_abschicken.php",
+                    cache: false,
+                    data: dataString,
+                    complete: function (data) {
+                        //todo: Gehe zu Tische
+                        SchankAnsichtRefresh();
                     },
                     error: onError
                 });
