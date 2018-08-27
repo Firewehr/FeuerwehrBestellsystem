@@ -111,6 +111,7 @@ error_reporting(E_ALL);
                                 . "`bestellungen`.`kueche`, "
                                 . "`bestellungen`.`delete`, "
                                 . "`bestellungen`.`rowid`, "
+								. "`bestellungen`.`bestellt`, "
                                 . "FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  "
                                 . "FROM bestellungen, positionen "
                                 . "WHERE bestellungen.position=positionen.rowid "
@@ -131,8 +132,11 @@ error_reporting(E_ALL);
                             if (!empty($row2['Zusatzinfo'])) {
                                 echo '<br/> (' . $row2['Zusatzinfo'] . ') ';
                             }
-							if (mysqli_num_rows($result2)==1 && $row2['anzahl'] == 1) {
+							if (mysqli_num_rows($result2)==1 && $row2['anzahl'] == 1 && $row2['bestellt'] == 1) {
 							echo '" onclick="schankGesamtFertig(' . $arrayListe . ');"/>';
+							}
+							elseif (mysqli_num_rows($result2)==1 && $row2['anzahl'] == 1 && $row2['bestellt'] == 0) {
+							echo '"onclick="bestellungSAAbschicken(' . $tischnummerselect . ');"/>';
 							}
 							else {
                             echo '" onclick="SchankFertig(' . $row2['rowid'] . ');"/>';
