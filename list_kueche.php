@@ -48,12 +48,13 @@ error_reporting(E_ALL);
                                 echo '<div style="background-color: #0ed615;" class="ui-block-a">';
                             } else {
                                 echo '<div style="background-color: #ff0000;" class="ui-block-a">';
+								
                             }
 
                             echo '<h2 style="font-size:30px">Tisch: ' . $row['tischname'] . '</h2>'; //. ' (#' . $row['tischnummer'] . 
                             $tischname = $row['tischname'];
                             echo '</div>';
-                            echo '<div class="ui-block-b">';
+							echo '<div class="ui-block-b">';
                             echo '<p>KellnerIn: ' . $row['kellner'] . '</p>';
                             echo '</div>';
                         }
@@ -260,6 +261,8 @@ error_reporting(E_ALL);
                         if ($row['bestellt'] == 1) {
                             echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" '
                             . 'onclick="kuecheGesamtFertig(' . $arrayListe . ');"/>';
+						} else {
+							echo '<input style="background-color: #8904B1" type="button" value="FORCE Bestellung" onclick="bestellungKUAbschicken(' . $tischnummerselect . ');"/>';
                         }
                         echo '<br><h1>&nbsp;</h1>';
                         echo '</div>';
