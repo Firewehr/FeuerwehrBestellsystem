@@ -126,24 +126,25 @@ error_reporting(E_ALL);
                                 . "ORDER BY positionen.Positionsname ASC";
 
                         $result2 = mysqli_query($conn, $sql2);
-
                         while ($row2 = mysqli_fetch_assoc($result2)) { //Ausgabe der offenen Bestellungen eines Tisches
-                            echo '<input style="background-color:#FFFF99; color:#f00;" type="button" value="(' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']);
-                            if (!empty($row2['Zusatzinfo'])) {
-                                echo '<br/> (' . $row2['Zusatzinfo'] . ') ';
-                            }
+                          
+							echo '<button type="button"';
 							if (mysqli_num_rows($result2)==1 && $row2['anzahl'] == 1 && $row2['bestellt'] == 1) {
-							echo '" onclick="schankGesamtFertig(' . $arrayListe . ');"/>';
+							echo 'onclick="schankGesamtFertig(' . $arrayListe . ')"';
 							}
 							elseif (mysqli_num_rows($result2)==1 && $row2['anzahl'] == 1 && $row2['bestellt'] == 0) {
-							echo '"onclick="bestellungSAAbschicken(' . $tischnummerselect . ');"/>';
+							echo 'onclick="bestellungSAAbschicken(' . $tischnummerselect . ')"';
 							}
 							else {
-                            echo '" onclick="SchankFertig(' . $row2['rowid'] . ');"/>';
+                            echo 'onclick="SchankFertig(' . $row2['rowid'] . ')"';
+							}					
+						 if (!empty($row2['Zusatzinfo'])) {
+                                echo '>(' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']) . '<br>(' . utf8_encode($row2['Zusatzinfo']) . ')</button>';
+                            } else {
+								echo '>(' . $row2['anzahl'] . 'x) ' . utf8_encode($row2['Positionsname']) . '</button>';
 							}
                             $timestamp = strtotime($row2['zeitstempel']);
                         }
-                        
                         echo '</div>';
                         echo '<div class="ui-block-b">';
 
