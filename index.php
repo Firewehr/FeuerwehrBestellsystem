@@ -626,6 +626,24 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                 data = $.trim(data);
             }
 
+			function Direkt_reset() {
+
+                if (confirm('Bestellungen reseten?')) {
+					dataString = "cmd=direkt_reset";
+                    $.ajax({						
+						url: 'Direkt_reset.php',
+						type: "GET",
+						data: dataString,
+						complete: function (data) {
+							Direktverkauf();
+						},
+						dataType: "json"
+					});
+                } else {
+                    alert("Keine Änderungen!");
+                }
+            }
+			
             function resetBestellungen() {
 
                 if (confirm('Wirklich alle Bestellungen löschen?')) {
@@ -783,6 +801,10 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
 
         <div data-role="page" id="SchankHistory">
         </div>
+		
+		<div data-role="page" id="DirektHistory">
+        </div>
+		
 
         <div data-role="page" id="listTischBestellungen">
             <a href="#listTische">zurueck</a>
@@ -963,6 +985,13 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     $('#SchankHistory').trigger('create');
                 });
             }
+			
+			function DirektHistory() {
+                //$("#KuecheHistory").html("loading ...");
+                $('#DirektHistory').load('direkt_history.php', function () {
+                    $('#DirektHistory').trigger('create');
+                });
+            }
 
             function KuechenansichtRefresh() {
                 $('#Kuechenansicht').load('list_kueche.php', function () {
@@ -975,7 +1004,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     $('#Schankansicht').trigger('create');
                 });
             }
-
+			
             function updatePW(userid) {
 
                 pwneu = prompt("Neues Passwort:");
