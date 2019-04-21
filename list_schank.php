@@ -361,7 +361,7 @@ error_reporting(E_ALL);
     }
 
     if (AnzahlOffeneBestellungenSchank > 0 && PlaySoundSchank === true) { //
-        document.getElementById("sound1").play();
+        document.getElementById("sound2").play();
         //alert(AnzahlOffeneBestellungenSchank + "neuer Eintrag!");
 
         //Notification if Supported by the Browser
