@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 <div data-role="header">
     <h1>Schank</h1>
     <a href="#indexPage" onclick="AnzahlBestellungenAktuell = -1;" class="ui-btn-left"> Zur&uuml;ck </a>
-	<a href="#SchankHistory" onclick="SchankHistory();" class="ui-btn-right">Historie</a>
+    <a href="#SchankHistory" onclick="SchankHistory();" class="ui-btn-right">Historie</a>
 </div>
 
 <div class="ui-grid-a ui-responsive">
@@ -61,8 +61,8 @@ error_reporting(E_ALL);
                         echo '<div class="ui-block-a">';
 
                         $tischnummerselect = $row['tischnummer'];
-						
-						//Abfrage ohne Group um die einzelnen ID's zu bekommen
+
+                        //Abfrage ohne Group um die einzelnen ID's zu bekommen
                         $query23 = "SELECT `bestellungen`.`zeitKueche`, "
                                 . "`bestellungen`.`position`, "
                                 . "`bestellungen`.`tischnummer`, "
@@ -78,7 +78,7 @@ error_reporting(E_ALL);
                                 . "WHERE bestellungen.position=positionen.rowid "
                                 . "AND `type`=2 "
                                 // Ansonsten druckt er nicht bei "Gesamt Fertig" die bereits hergerichteten Speisen#. "AND bestellungen.zeitKueche='0000-00-00 00:00:00' "
-								. "AND bestellungen.print <> 1 "
+                                . "AND bestellungen.print <> 1 "
                                 . "AND bestellungen.ausgeliefert=0 "
                                 . "AND positionen.type=2 "
                                 . "AND bestellungen.delete=0 "
@@ -95,7 +95,7 @@ error_reporting(E_ALL);
                             $tischnr = $row23['tischnummer'];
                         }
 
-						$arrayListe = substr($arrayListe, 0, -1);
+                        $arrayListe = substr($arrayListe, 0, -1);
                         $arrayListe = $arrayListe . ']';
 
                         $sql2 = "SELECT COUNT( * ) AS anzahl, "
@@ -111,7 +111,7 @@ error_reporting(E_ALL);
                                 . "`bestellungen`.`kueche`, "
                                 . "`bestellungen`.`delete`, "
                                 . "`bestellungen`.`rowid`, "
-								. "`bestellungen`.`bestellt`, "
+				. "`bestellungen`.`bestellt`, "
                                 . "FLOOR(UNIX_TIMESTAMP(`bestellungen`.`zeitstempel`)/900) AS tt  "
                                 . "FROM bestellungen, positionen "
                                 . "WHERE bestellungen.position=positionen.rowid "
@@ -267,7 +267,7 @@ error_reporting(E_ALL);
                             echo '<input style="background-color:#00FF6A; color:#f99;" type="button" value="Gesamt Fertig" '
                             . 'onclick="schankGesamtFertig(' . $arrayListe . ',' . $tischnr . ');"/>';
                         } else {
-							echo '<input style="background-color: #8904B1" type="button" value="FORCE Bestellung" onclick="bestellungSAAbschicken(' . $tischnummerselect . ');"/>';
+                            echo '<input style="background-color: #8904B1" type="button" value="FORCE Bestellung" onclick="bestellungSAAbschicken(' . $tischnummerselect . ');"/>';
                         }
                         echo '<br><h1>&nbsp;</h1>';
                         echo '</div>';
