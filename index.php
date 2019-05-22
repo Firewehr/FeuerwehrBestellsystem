@@ -1005,7 +1005,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                     $('#Schankansicht').trigger('create');
                 });
             }
-			
+
             function updatePW(userid) {
 
                 pwneu = prompt("Neues Passwort:");
