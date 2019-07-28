@@ -1,5 +1,7 @@
 <?php
 
+require_once('auth.php');
+
 if ($_SESSION['admin'] != 1) {
     header('Location: index.php');
 }
