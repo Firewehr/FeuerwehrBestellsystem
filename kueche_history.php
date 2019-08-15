@@ -1,9 +1,6 @@
 <a  href="#indexPage" data-theme="b" class="ui-btn ui-icon-arrow-l ui-btn-icon-left">Zurück</a>
 
 <?php
-
-require_once('auth.php');
-
 error_reporting(E_ALL);
 include_once ("include/db.php");
 $sql2 = "SELECT "
