@@ -82,7 +82,7 @@ if (isset($_SESSION['login'])) {
                     <td><input type="text" name="f[username]" id="username"<?php echo isset($_POST['f']['username']) ? ' value="' . htmlspecialchars($_POST['f']['username']) . '"' : '' ?> /></td>
                 </tr>
                 <tr>
-                    <td>Kennnwort</td>
+                    <td>Kennwort</td>
                     <td><input type="password" name="f[password]" id="password" /></td>
                 </tr>
 
