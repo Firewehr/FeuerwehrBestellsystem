@@ -256,11 +256,11 @@ if ($_SESSION['admin'] != 1) {
             echo '<tr><th>Kellner</th><th>Anzahl</th><th>Betrag</th></tr>';
             $summe = 0;
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td align="left">' . $row['cnt'] . '</td><td align="right">' . money_format("%i", $row['summe']) . '</td></tr>';
+                echo '<tr><td>' . $row['kellnerZahlung'] . '</td><td align="left">' . $row['cnt'] . '</td><td align="right">' . @money_format("%i", $row['summe']) . '</td></tr>';
                 $summe = $summe + $row['summe'];
             }
 
-            echo '<tr><td>Summe</td><td>&nbsp;</td><td>' . money_format("%i", $summe) . ' </td></tr>';
+            echo '<tr><td>Summe</td><td>&nbsp;</td><td>' . @money_format("%i", $summe) . ' </td></tr>';
             echo '</table>';
             echo '</div>';
 
@@ -301,7 +301,7 @@ if ($_SESSION['admin'] != 1) {
             $result = mysqli_query($conn, $sql);
             echo '<table data-mode="columntoggle"><thead><th>Tisch#</th><th>Umsatz</th></thead><tbody>';
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<tr><td>' . $row['tischname'] . '</td><td align="right">' . money_format("%i", $row['summe']) . '</td></tr>';
+                echo '<tr><td>' . $row['tischname'] . '</td><td align="right">' . @money_format("%i", $row['summe']) . '</td></tr>';
             }
             echo '</tbody></table>';
             echo '</div>';
