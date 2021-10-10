@@ -18,7 +18,8 @@ require_once('auth.php');
     $Tischnummer = intval($_GET['tischnummer']);
     error_reporting(E_ALL);
     echo '<table border="0" width="100%">';
-    try {
+    $formatter = new NumberFormatter('de_DE',  NumberFormatter::CURRENCY);
+	try {
         include_once ("include/db.php");
         $sql = "SELECT `bestellungen`.`tischnummer`,"
                 . "bestellungen.timestampBezahlung,"
@@ -81,8 +82,8 @@ require_once('auth.php');
             . ' arrayZahlungGetrennt.push(' . $row['rowidBestellung'] . ')" value="&nbsp;+&nbsp;"/>';
             echo '</td>';
 
-            setlocale(LC_MONETARY, 'de_DE@euro');
-            echo '<td wdith="20%" align="right">' . money_format('%i', (float) $row['betrag']) . '</td>';
+			
+			echo '<td wdith="20%" align="right">' . $formatter->formatCurrency((float) $row['betrag'], 'EUR')  . '</td>';
             echo '</tr>';
         }
         if ($i > 0) {
@@ -97,7 +98,8 @@ require_once('auth.php');
         echo '</td>';
 
         echo '<td align="right"><h2><div id="summeZahlung">';
-        echo money_format('%i', (double) $Summe);
+		
+		echo $formatter->formatCurrency((double) $Summe, 'EUR');
         echo '</div></h2><td></tr>';
 
         echo '<tr>';
