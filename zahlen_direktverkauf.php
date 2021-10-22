@@ -1,11 +1,8 @@
 <?php
-
 require_once('auth.php');
-
 include_once ("include/db.php");
-
 $Tischnummer = 999999;
-
+$formatter = new NumberFormatter('de_DE',  NumberFormatter::CURRENCY);
 $sql = "SELECT `bestellungen`.`tischnummer`,"
         . "bestellungen.timestampBezahlung, "
         . "`positionen`.`Betrag` as betrag,"
@@ -50,7 +47,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 $arrayListe = substr($arrayListe, 0, -1);
 $arrayListe = $arrayListe . ']';
 echo '<h2>Gesamt: ';
-echo money_format('%i', (double) $Summe);
+echo $formatter->formatCurrency((double) $Summe, 'EUR');
 echo '</h2>';
 
 //echo $rowIDsBezahltAlle;
