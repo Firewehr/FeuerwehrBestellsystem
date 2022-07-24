@@ -10,7 +10,7 @@ require_once('auth.php');
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta name="mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="include/jquery/jquery.mobile-1.4.5.css" />
-        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+        <!--<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">-->
 
         <!--<link rel="stylesheet" href="own.css"/>-->
         <link rel="stylesheet" href="style.css"/>
