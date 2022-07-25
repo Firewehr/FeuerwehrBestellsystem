@@ -1,4 +1,7 @@
 <?php
+//Globale Variablen
+$Titellogin = 'Bestellsystem';
+$FFName = 'FF-ABCdorf';
 
 /*
   $hostname = 'localhost';
