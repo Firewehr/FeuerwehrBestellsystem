@@ -742,7 +742,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                         <a href="backup_download.php" target="_blank">Sicherung Starten</a>
                     </li>
                     <li>
-                        <a onclick="logout();" >als <?php echo htmlspecialchars($_SESSION['user']['username']); ?> abmelden</a>
+                        <a onclick="logout();" class="ui-btn ui-btn-b" >als <?php echo htmlspecialchars($_SESSION['user']['username']); ?> abmelden</a>
                     </li>
 
 
