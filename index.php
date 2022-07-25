@@ -709,7 +709,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
         <div data-role="page" id="indexPage">
 
             <div data-role="header" data-position="fixed">
-                <h1>Bestellsystem Fr&uuml;hschoppen</h1>
+                <h1><p><?=$FFName?> <?=$Titellogin?></p></h1>
             </div>
 
             <div data-role="content">
