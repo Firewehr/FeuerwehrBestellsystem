@@ -61,7 +61,7 @@ if (isset($_SESSION['login'])) {
 
     <body>
         <form action="login.php" method="post">
-            <table width="300px" border="1">
+            <table width="300px" border-bottom: 1px solid #ddd;>
 
                 <?php if (isset($message['error'])): ?>
                     <fieldset class="error"><legend>Fehler</legend><?php echo $message['error'] ?></fieldset>
@@ -88,8 +88,8 @@ if (isset($_SESSION['login'])) {
 
 
                 <tr>
-                    <td>&nbsp;</td>
-                    <td><input type="submit" name="submit" value="Anmelden" /></td>
+                    <td><input type="submit" class="ui-btn ui-btn-b" name="submit" value="Anmelden" /></td>
+                    <td><input type="reset" class="ui-btn ui-btn-a" value="Reset"></td>
                 </tr>
 
 
