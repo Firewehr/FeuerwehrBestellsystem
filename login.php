@@ -76,7 +76,10 @@ if (isset($_SESSION['login'])) {
                     ?>
                     <fieldset class="notice"><legend>Hinweis</legend><?php echo $message['notice'] ?></fieldset>
                 <?php endif; ?>
-
+                <!-- Edit names in include\db.php -->
+				<h1><p><?=$Titellogin?></p></h1>
+				<h2><p><?=$FFName?></p></h2>
+                
                 <tr>
                     <td>Benutzername</td>
                     <td><input type="text" name="f[username]" id="username"<?php echo isset($_POST['f']['username']) ? ' value="' . htmlspecialchars($_POST['f']['username']) . '"' : '' ?> /></td>
