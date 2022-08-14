@@ -10,15 +10,17 @@ import os.path
 
 save_path = "C:\\POS-Daten"
 completeName = os.path.join(save_path, "printPOS.txt")
-url = 'http://ff-kassa.bplaced.net/print.php?type=2'
-#url = 'http://ff-pos.square7.ch/print.php?type=2'
+FFname = 'ABC-Dorf'
+url = 'http://ABC.dorf.net/print.php?type=2'	#type=1 = kueche \ type=2 = schank
+#url = 'http://ABC.dorf.net/print.php?type=2'
 
 def EpsonFinishCut(total):
 	myfile.write("!")#Set Double Width
 	myfile.write("Total: EUR " + str(format(total, ',.2f')) + "\n")
 	myfile.write("\x1B!\x00")#Set Normal
 	myfile.write("\x1B\x61\x01")#set alignment center
-	myfile.write("\nwww.ff-wetzleinsdorf.at\n")
+	myfile.write("\nGuten Appetit!\n")
+	#myfile.write("\x1B\x70\x30\x3C\x78\x00")#Cashdrawer-open
 	myfile.write("\n\n\n\n\n\n\n\x0D\x0c")#abstand
 	myfile.write("\x1D\x56\x00\x0A")#schneiden
 	myfile.close() 
@@ -62,7 +64,7 @@ while 1:
 				myfile.write("\x1b\x44\x05\x1F\x22\x24\x00")# Set tab stops at x, y, and z32 characters
 				myfile.write("!")#Set Double Width
 				myfile.write("Freiwillige Feuerwehr\n")
-				myfile.write("Wetzleinsdorf\n")
+				myfile.write(FFname + "\n")
 				myfile.write("\x1B!\x00")#Set Normal
 				myfile.write("   Tisch:  ")
 				myfile.write("!3"+ i['tischname'] + "\n")
