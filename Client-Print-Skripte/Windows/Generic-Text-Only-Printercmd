@@ -1,0 +1,39 @@
+https://www.easyas.co.za/downloads/Generic%20Text%20Only%20Printer%20commands.txt
+To cut paper (End Job Command):
+
+<0A0A0A0A1B>i
+
+Escape Commands for Generic Text Driver
+
+Epson printers:
+Open Drawer: <1B><70><30><3C><78><00>
+Open Drawer: <1B><70><00><19><64> (MMF drawers)
+Cut Paper: <1B><56><30>
+Double Width: <1B><21><20>
+Normal: <1B><21><01>
+Reverse Feed: <1B><65><02> 
+
+Star Printers:
+Open Drawer: <07>
+
+Citizen Printers:
+Open Drawer: <1B><70><00><32><FA><00>
+
+Samsung Printers:
+Open Drawer: <1B><70><00><19><FA><00>
+Cut Paper: <1D><56><42><00>
+
+1) Open the Control Panel.
+2) Double click on Printers and Faxes.
+3) Right Mouse click on the Generic Text Only driver.
+4) Select Properties.
+5) Click on Printer Commands.
+6) Enter the escape sequence in the Begin Print Job just as it's shown with the angle brackets.
+
+Also set the Paper Source:
+1) Click on General tab.
+2) Click on Printing Preferences... button.
+3) Click on Paper/Quality tab.
+4) Paper Source: Cont. Feed - With Break
+
+These are for cash drawers that are connected to the printer. There are variations where this commands will not work.
