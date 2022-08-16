@@ -14,7 +14,8 @@ foreach ($PositionsListe as $row) {
             . "`zeitKueche`=current_timestamp,"
             . "`kueche`= '1',"
             . "`print`=2 "
-            . "WHERE zeitKueche='0000-00-00 00:00:00' AND rowid=" . intval($row);
+        	. "WHERE rowid=" . intval($row);
+            #Ansonsten druckt er nicht die bereits hergerichteten Speisen / . "WHERE zeitKueche='0000-00-00 00:00:00' AND rowid=" . intval($row);
 
     if (mysqli_query($conn, $sql)) {
         echo "Record updated successfully";
