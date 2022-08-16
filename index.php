@@ -619,7 +619,20 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                  
                  }*/
             }
-
+			
+            function bestellungBezStorno(rowid, tischnummer) {
+                $.ajax({
+                    type: "GET",
+                    url: "bestellung_bez_storno.php?rowid=" + rowid,
+                    cache: false,
+                    complete: function (data) {
+                        Summe = 0;
+                        TischAnsichtHistory();
+                    },
+                    error: onError
+                });
+            }
+		
             function onSuccess()
             {
                 alert("erfolg!");
