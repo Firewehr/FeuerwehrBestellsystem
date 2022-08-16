@@ -87,6 +87,12 @@ try {
             </div>
             <?php
         }
+        elseif ($_SESSION['admin'] == 1 ) {
+			echo '<a href="#" class="' . "ui-btn ui-icon-delete ui-btn-icon-left ui-shadow-icon ui-btn-b"
+            . '" onclick="'
+            . 'bestellungBezStorno(' . $row['rowid'] . ',' . $Tischnummer . ');' . '">Zahlung Stornieren</a>';
+		}
+        
         echo '</div>';
 
 
