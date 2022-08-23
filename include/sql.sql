@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Datenbank: `ff_manhartsbrunnatdb2`
+-- Datenbank: `ff_ABCdorf`
 --
 
 -- --------------------------------------------------------
@@ -78,7 +78,8 @@ CREATE TABLE `positionen` (
   `maxBestellbar` int(11) NOT NULL DEFAULT '-1',
   `reihenfolge` int(11) NOT NULL,
   `color` varchar(8) CHARACTER SET latin1 COLLATE latin1_german1_ci NOT NULL,
-  `icon` varchar(30) CHARACTER SET latin1 COLLATE latin1_german1_ci NOT NULL
+  `icon` varchar(30) CHARACTER SET latin1 COLLATE latin1_german1_ci NOT NULL,
+  `invisible` int(2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
