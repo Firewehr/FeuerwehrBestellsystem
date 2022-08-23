@@ -10,8 +10,9 @@ $Positionsname = utf8_decode($Positionsname);
 $Betrag = mysqli_real_escape_string($conn, $_POST['Betrag']);
 $type = intval($_POST['type']);
 $Kapazitaet = intval($_POST['Kapazitaet']);
+$Invisible = intval($_POST['Invisible']);
 
-$sql = "INSERT `positionen` SET `type`='$type',`positionsname`='$Positionsname',`Betrag`=$Betrag,`maxBestellbar`=$Kapazitaet";
+$sql = "INSERT `positionen` SET `type`='$type',`positionsname`='$Positionsname',`Betrag`=$Betrag,`maxBestellbar`=$Kapazitaet, `Invisible`=$Invisible";
 
 if (!mysqli_query($conn, $sql)) {
     die('Error: ' . utf8_encode(mysqli_error($conn)));
