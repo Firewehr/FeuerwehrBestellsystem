@@ -8,7 +8,13 @@ echo '<div id="Getraenke">';
 include_once ("include/db.php");
 error_reporting(E_ALL);
 echo '<div class="ui-grid-a">';
-$sql = "SELECT * FROM positionen WHERE type=2 ORDER BY reihenfolge";
+#Als Admin sieht man alle Positionen. (invisible Variable)
+if ($_SESSION['admin'] == 1) {
+	$sql = "SELECT * FROM positionen WHERE type=2 ORDER BY reihenfolge";
+}
+else {
+	$sql = "SELECT * FROM positionen WHERE type=2 AND (invisible is null OR NOT invisible=1) ORDER BY reihenfolge";
+}
 $result = mysqli_query($conn, $sql);
 $i = 0;
 $Colour = "#FFFFFF";
@@ -48,6 +54,11 @@ while ($rowww = mysqli_fetch_assoc($result)) {
         while ($row = mysqli_fetch_assoc($result5)) {
             echo 'Anzahl' . $row['cnt'];
             $anzahlBestellt = $row['cnt'];
+        }
+
+		$Invisible = $rowww['invisible'];
+        if ($Invisible == 1) {
+			$Colour = "#b7b1fc";
         }
 
         $maxBestellbar = $rowww['maxBestellbar'];
