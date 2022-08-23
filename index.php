@@ -1,4 +1,5 @@
 <?php
+<?php
 require_once('auth.php');
 ?>
 
@@ -459,7 +460,8 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
 
             function ProduktNeu() {
                 //dataString = "username=" + document.getElementById('username').value + "&password=" + document.getElementById('password').value + "&password_again=" + document.getElementById('password_again').value;
-                dataString = "Positionsname=" + $('#Positionsname').val() + "&Betrag=" + $('#Betrag').val() + "&type=" + $('#produktkategorie').val() + "&Kapazitaet=" + $('#Kapazitaet').val();
+                //dataString = "Positionsname=" + $('#Positionsname').val() + "&Betrag=" + $('#Betrag').val() + "&type=" + $('#produktkategorie').val() + "&Kapazitaet=" + $('#Kapazitaet').val();
+				dataString = "Positionsname=" + $('#Positionsname').val() + "&Betrag=" + $('#Betrag').val() + "&type=" + $('#produktkategorie').val() + "&Kapazitaet=" + $('#Kapazitaet').val() + "&Invisible=" + $('#Invisible').val();
 
                 $.ajax({
                     type: "POST",
@@ -479,6 +481,7 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
                         $('#produktkategorie').val("");
                         $('#produktpreis').val("");
                         $('#Kapazitaet').val("");
+						$('#Invisible').val("");
                         AdminAnsicht();
                     },
                     error: onError
