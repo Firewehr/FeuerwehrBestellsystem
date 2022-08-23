@@ -8,8 +8,13 @@ include_once ("include/db.php");
 
 <?php
 echo '<div id="Speisen">';
-
-$sql1 = "SELECT * FROM positionen WHERE type=1 ORDER BY reihenfolge";
+#Als Admin sieht man alle Positionen. (invisible Variable)
+if ($_SESSION['admin'] == 1) {
+	$sql1 = "SELECT * FROM positionen WHERE type=1 ORDER BY reihenfolge";
+}
+else {
+	$sql1 = "SELECT * FROM positionen WHERE type=1 AND (invisible is null OR NOT invisible=1) ORDER BY reihenfolge";
+}
 $result1 = mysqli_query($conn, $sql1);
 $fontColour = "#000000";
 $Colour = "#FFFFFF";
@@ -62,7 +67,12 @@ while ($rowww = mysqli_fetch_assoc($result1)) {
             $anzahlBestellt = $row5['cnt'];
         }
 
-        $maxBestellbar = $rowww['maxBestellbar'];
+        $Invisible = $rowww['invisible'];
+        if ($Invisible == 1) {
+			$Colour = "#b7b1fc";
+        }
+		
+		$maxBestellbar = $rowww['maxBestellbar'];
         if ($maxBestellbar > 0) {
 
             if (($maxBestellbar - $anzahlBestellt) <= 0) {
