@@ -125,6 +125,7 @@ if ($_SESSION['admin'] != 1) {
                     </div>
                     <div><label for="Betrag">Preis</label> <input type="text" name="f[Betrag]" id="Betrag" placeholder="Bitte Punkt statt Komma für Kommazahlen verwenden!" required /></div>
                     <div><label for="Kapazitaet">Kapazität</label> <input value placeholder="Die maximal bestellbare Menge. -1 für unendlich" type="number" name="f[Kapazitaet]" id="Kapazitaet" /></div>
+					<div><label for="Invisible">Sichtbar</label><select id="Invisible" data-role="flipswitch"><option  value="0">Ja</option><option value="1">Nein</option></select></div>
 
                     <fieldset>
                         <div>
